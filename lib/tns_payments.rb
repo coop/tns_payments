@@ -4,4 +4,7 @@ require 'tns_payments/response'
 require 'tns_payments/version'
 
 module TNSPayments
+  def self.new options = {}
+    Connection.new options
+  end
 end
