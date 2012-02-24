@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Tim Cooper"]
   s.email       = ["coop@latrobest.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Integration with TNS Payments Gateway}
-  s.description = %q{TODO: Integration with TNS Payments Gateway}
+  s.summary     = %q{Integration with TNS Payments Gateway}
+  s.description = %q{Integration with TNS Payments Gateway}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- test/*`.split("\n")
