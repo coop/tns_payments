@@ -22,7 +22,7 @@ module TNSPayments
     end
 
     def purchase transaction, token
-      order_id       = create_order_id transaction.order_id
+      order_id       = transaction.order_id
       transaction_id = transaction.transaction_id
       params         = {
         'apiOperation' => 'PAY',
@@ -35,7 +35,7 @@ module TNSPayments
     end
 
     def refund transaction
-      order_id       = create_order_id transaction.order_id
+      order_id       = transaction.order_id
       transaction_id = transaction.transaction_id
       params         = {
         'apiOperation' => 'REFUND',
@@ -63,10 +63,6 @@ module TNSPayments
 
     def api_url
       'https://secure.ap.tnspayments.com/api/rest/version/4'
-    end
-
-    def create_order_id id
-      10000000000 + id.to_i
     end
 
     def encode_credentials
