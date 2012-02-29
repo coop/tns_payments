@@ -22,38 +22,38 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
 
   def test_purchase_with_session_token_makes_a_successful_purchase
     stub_successful_session_token_purchase_request :amount => 100, :token => 'SESSIONTOKEN', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
-    response = @gateway.purchase 100, 'SESSIONTOKEN', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
+    response = @gateway.purchase mock_transaction, 'SESSIONTOKEN'
     assert response.success?
   end
 
   def test_purchase_with_session_token_makes_an_unsuccessful_purchase
     stub_unsuccessful_session_token_purchase_request :amount => 100, :token => 'SESSIONTOKEN', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
-    response = @gateway.purchase 100, 'SESSIONTOKEN', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
+    response = @gateway.purchase mock_transaction, 'SESSIONTOKEN'
     refute response.success?
   end
 
   def test_purchase_with_session_token_can_deal_with_timeout_errors
     stub_session_token_purchase_request(:amount => 100, :token => 'SESSIONTOKEN', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123').
       to_timeout
-    response = @gateway.purchase 100, 'SESSIONTOKEN', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
+    response = @gateway.purchase mock_transaction, 'SESSIONTOKEN'
     refute response.success?
   end
 
   def test_purchase_with_credit_card_token_makes_a_successful_purchase
     stub_successful_credit_card_token_purchase_request(:amount => 100, :token => '9111111111111111', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123')
-    assert @gateway.purchase(100, '9111111111111111', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123').success?
+    assert @gateway.purchase(mock_transaction, '9111111111111111').success?
   end
 
   def test_purchase_with_credit_card_token_makes_an_unsuccessful_purchase
     stub_unsuccessful_credit_card_token_purchase_request :amount => 100, :token => '9111111111111111', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
-    response = @gateway.purchase 100, '9111111111111111', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
+    response = @gateway.purchase mock_transaction, '9111111111111111'
     refute response.success?
   end
 
   def test_purchase_with_credit_card_token_can_deal_with_timeout_errors
     stub_credit_card_token_purchase_request(:amount => 100, :token => '9111111111111111', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123').
       to_timeout
-    response = @gateway.purchase 100, '9111111111111111', :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
+    response = @gateway.purchase mock_transaction, '9111111111111111'
     refute response.success?
   end
 
@@ -240,5 +240,14 @@ private
   def stub_delete_credit_card_token_request
     stub_request(:delete, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/token\/\d{16}/).
       with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'Application/json;charset=UTF-8'}, :body => {})
+  end
+
+  def mock_transaction
+    mock = MiniTest::Mock.new
+    mock.expect :amount, 100
+    mock.expect :order_id, 1
+    mock.expect :transaction_id, 1
+    mock.expect :reference, 'AUD123'
+    mock
   end
 end

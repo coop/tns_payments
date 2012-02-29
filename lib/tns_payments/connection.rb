@@ -21,14 +21,14 @@ module TNSPayments
       "https://secure.ap.tnspayments.com/form/#{session_token}"
     end
 
-    def purchase amount, token, options = {}
-      order_id       = create_order_id options[:order_id]
-      transaction_id = options[:transaction_id]
+    def purchase transaction, token
+      order_id       = create_order_id transaction.order_id
+      transaction_id = transaction.transaction_id
       params         = {
         'apiOperation' => 'PAY',
-        'order'        => {'reference'               => options[:order_reference]},
+        'order'        => {'reference'               => transaction.reference},
         'cardDetails'  => {purchase_token_key(token) => token},
-        'transaction'  => {'amount'                  => amount.to_s, 'currency' => 'AUD', 'reference' => transaction_id.to_s}
+        'transaction'  => {'amount'                  => transaction.amount.to_s, 'currency' => 'AUD', 'reference' => transaction.transaction_id.to_s}
       }
 
       request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
