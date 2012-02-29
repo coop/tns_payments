@@ -59,20 +59,20 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
 
   def test_refund_makes_successful_refund
     stub_successful_refund_request :amount => 100, :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
-    response = @gateway.refund 100, :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
+    response = @gateway.refund mock_transaction
     assert response.success?
   end
 
   def test_refund_makes_unsuccessful_refund
     stub_unsuccessful_refund_request :amount => 100, :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
-    response = @gateway.refund 100, :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
+    response = @gateway.refund mock_transaction
     refute response.success?
   end
 
   def test_refund_can_deal_with_timeout_errors
     stub_refund_request(:amount => 100, :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123').
       to_timeout
-    response = @gateway.refund 100, :order_id => 1, :transaction_id => 1, :order_reference => 'AUD123'
+    response = @gateway.refund mock_transaction
     refute response.success?
   end
 
