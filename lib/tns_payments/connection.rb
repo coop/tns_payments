@@ -22,11 +22,16 @@ module TNSPayments
     end
 
     def purchase amount, token, options = {}
-      if token =~ CREDIT_CARD_TOKEN_FORMAT
-        purchase_with_credit_card_token amount, token, options
-      else
-        purchase_with_session_token amount, token, options
-      end
+      order_id       = create_order_id options[:order_id]
+      transaction_id = options[:transaction_id]
+      params         = {
+        'apiOperation' => 'PAY',
+        'order'        => {'reference'               => options[:order_reference]},
+        'cardDetails'  => {purchase_token_key(token) => token},
+        'transaction'  => {'amount'                  => amount.to_s, 'currency' => 'AUD', 'reference' => transaction_id.to_s}
+      }
+
+      request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
     end
 
     def refund amount, options = {}
@@ -76,30 +81,8 @@ module TNSPayments
       'Basic ' << Base64.encode64(credentials)
     end
 
-    def purchase_with_credit_card_token amount, token, options = {}
-      order_id       = create_order_id options[:order_id]
-      transaction_id = options[:transaction_id]
-      params         = {
-        'apiOperation' => 'PAY',
-        'order'        => {'reference' => options[:order_reference]},
-        'cardDetails'  => {'cardToken' => token},
-        'transaction'  => {'amount'    => amount.to_s, 'currency' => 'AUD', 'reference' => transaction_id.to_s}
-      }
-
-      request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
-    end
-
-    def purchase_with_session_token amount, token, options = {}
-      order_id       = create_order_id options[:order_id]
-      transaction_id = options[:transaction_id]
-      params         = {
-        'apiOperation' => 'PAY',
-        'order'        => {'reference' => options[:order_reference]},
-        'cardDetails'  => {'session'   => token},
-        'transaction'  => {'amount'    => amount.to_s, 'currency' => 'AUD', 'reference' => transaction_id.to_s}
-      }
-
-      request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
+    def purchase_token_key token
+      token =~ CREDIT_CARD_TOKEN_FORMAT ? 'cardToken' : 'session'
     end
 
     def request method, path, options = {}
