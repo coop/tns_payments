@@ -54,16 +54,9 @@ module TNSPayments
       request :delete, "/merchant/#{@merchant_id}/token/#{token}"
     end
 
-    def session_token?
-      !@session_token.nil?
-    end
-
-    def session_token reload = false
-      if @session_token.nil? or reload
-        response = request :post, "/merchant/#{@merchant_id}/session"
-        @session_token = response.success?? response.response['session'] : nil
-      end
-      @session_token
+    def session_token
+      response = request :post, "/merchant/#{@merchant_id}/session"
+      response.success?? response.response['session'] : raise(response.response.inspect)
     end
 
   private

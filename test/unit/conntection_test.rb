@@ -103,6 +103,11 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
     refute @gateway.delete_credit_card_token('9123456781234567').success?
   end
 
+  def test_session_token_returns_token
+    stub_successful_session_token_request
+    assert_equal 'SESSIONTOKEN', @gateway.session_token
+  end
+
 private
 
   def stub_availability_request
@@ -163,6 +168,21 @@ private
   def stub_unsuccessful_delete_credit_card_token_request
     stub_delete_credit_card_token_request.
       to_return(:status => 200, :body => '{"result":"FAILURE"}', :headers => {})
+  end
+
+  def stub_successful_session_token_request
+    stub_session_token_request.
+      to_return(:status => 200, :body => '{"result":"SUCCESS","session":"SESSIONTOKEN"}', :headers => {})
+  end
+
+  def stub_session_token_request
+    stub_request(:post, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/session/).
+      with :headers => {
+             'Accept' => '*/*',
+             'Accept-Encoding' => 'gzip, deflate',
+             'Content-Length'  => '2',
+             'Content-Type'    => 'Application/json;charset=UTF-8'
+           }
   end
 
   def stub_session_token_purchase_request options = {}
