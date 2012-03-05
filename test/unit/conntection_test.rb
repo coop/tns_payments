@@ -178,7 +178,7 @@ private
              'apiOperation' => 'PAY',
              'order'        => {'reference' => transaction.reference.to_s},
              'cardDetails'  => {'session' => token.to_s},
-             'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => 'AUD', 'reference' => transaction.transaction_id.to_s}
+             'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction.transaction_id.to_s}
            }),
            :headers => {
              'Accept' => '*/*',
@@ -194,7 +194,7 @@ private
              'apiOperation' => 'PAY',
              'order'        => {'reference' => transaction.reference.to_s},
              'cardDetails'  => {'cardToken' => token.to_s},
-             'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => 'AUD', 'reference' => transaction.transaction_id.to_s}
+             'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction.transaction_id.to_s}
            }),
            :headers => {
              'Accept' => '*/*',
@@ -209,7 +209,7 @@ private
       with :body => JSON.generate({
              'apiOperation' => 'REFUND',
              'order'        => {'reference' => transaction.reference.to_s},
-             'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => 'AUD', 'reference' => transaction.transaction_id.to_s}
+             'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction.transaction_id.to_s}
            }),
            :headers => {
              'Accept'          => '*/*',
@@ -232,6 +232,7 @@ private
   def mock_transaction
     mock = MiniTest::Mock.new
     mock.expect :amount, 100
+    mock.expect :currency, 'AUD'
     mock.expect :order_id, 10000000001
     mock.expect :transaction_id, 1
     mock.expect :reference, 'AUD123'

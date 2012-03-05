@@ -28,7 +28,7 @@ module TNSPayments
         'apiOperation' => 'PAY',
         'order'        => {'reference'               => transaction.reference},
         'cardDetails'  => {purchase_token_key(token) => token},
-        'transaction'  => {'amount'                  => transaction.amount.to_s, 'currency' => 'AUD', 'reference' => transaction_id.to_s}
+        'transaction'  => {'amount'                  => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
       }
 
       request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
@@ -40,7 +40,7 @@ module TNSPayments
       params         = {
         'apiOperation' => 'REFUND',
         'order'        => {'reference' => transaction.reference},
-        'transaction'  => {'amount'    => transaction.amount.to_s, 'currency' => 'AUD', 'reference' => transaction_id.to_s}
+        'transaction'  => {'amount'    => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
       }
 
       request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
