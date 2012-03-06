@@ -55,8 +55,10 @@ module TNSPayments
     end
 
     def session_token
-      response = request :post, "/merchant/#{@merchant_id}/session"
-      response.success?? response.response['session'] : raise(response.response.inspect)
+      @session_token ||= begin
+        response = request :post, "/merchant/#{@merchant_id}/session"
+        response.success?? response.response['session'] : raise(response.response.inspect)
+      end
     end
 
   private

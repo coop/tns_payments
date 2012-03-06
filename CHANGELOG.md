@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.3 / 2012-03-06
+
+* `Connection#session_token` updates when the setter is called or when nil.
+
 ## 0.0.2 / 2012-03-05
 
 * `Connection#purchase` and `Connection#refund` takes an object instead of many arguments.
