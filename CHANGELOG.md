@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.4 (unreleased)
+
+* Do not send an order reference when refunding.
+
 ## 0.0.3 / 2012-03-06
 
 * `Connection#session_token` updates when the setter is called or when nil.

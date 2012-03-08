@@ -208,13 +208,12 @@ private
     stub_request(:put, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'REFUND',
-             'order'        => {'reference' => transaction.reference.to_s},
              'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction.transaction_id.to_s}
            }),
            :headers => {
              'Accept'          => '*/*',
              'Accept-Encoding' => 'gzip, deflate',
-             'Content-Length'  => '120',
+             'Content-Length'  => '89',
              'Content-Type'    => 'Application/json;charset=UTF-8'
            }
   end

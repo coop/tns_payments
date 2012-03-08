@@ -39,8 +39,7 @@ module TNSPayments
       transaction_id = transaction.transaction_id
       params         = {
         'apiOperation' => 'REFUND',
-        'order'        => {'reference' => transaction.reference},
-        'transaction'  => {'amount'    => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
+        'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
       }
 
       request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
