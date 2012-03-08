@@ -6,6 +6,7 @@ module TNSPayments
   class Connection
     CREDIT_CARD_TOKEN_FORMAT = /^9/ # /\d{16}/
 
+    attr_accessor :host
     attr_writer :session_token
 
     def available?
@@ -15,10 +16,11 @@ module TNSPayments
     def initialize options
       @api_key     = options[:api_key]
       @merchant_id = options[:merchant_id]
+      self.host    = options.fetch(:host) { 'https://secure.ap.tnspayments.com' }
     end
 
     def payment_form_url
-      "https://secure.ap.tnspayments.com/form/#{session_token}"
+      "#{host}/form/#{session_token}"
     end
 
     def purchase transaction, token
@@ -63,7 +65,7 @@ module TNSPayments
   private
 
     def api_url
-      'https://secure.ap.tnspayments.com/api/rest/version/4'
+      "#{host}/api/rest/version/4"
     end
 
     def encode_credentials

@@ -2,6 +2,7 @@
 
 ## 0.0.4 (unreleased)
 
+* Make `host` an accessor.
 * Do not send an order reference when refunding.
 
 ## 0.0.3 / 2012-03-06
