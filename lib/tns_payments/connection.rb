@@ -4,7 +4,7 @@ require 'rest-client'
 
 module TNSPayments
   class Connection
-    CREDIT_CARD_TOKEN_FORMAT = /^9/ # /\d{16}/
+    CREDIT_CARD_TOKEN_FORMAT = /^9\d{15}/
 
     attr_accessor :host
     attr_writer :session_token

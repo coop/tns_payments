@@ -2,6 +2,7 @@
 
 ## 0.0.4 (unreleased)
 
+* Check credit card token length as well as starting digit.
 * Make `host` an accessor.
 * Do not send an order reference when refunding.
 
