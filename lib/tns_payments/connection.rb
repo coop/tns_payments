@@ -87,9 +87,9 @@ module TNSPayments
       args = [headers]
       args.unshift(options.to_json) unless [:delete, :get, :head].include? method
 
-      Response.new JSON.parse(RestClient.send(method, url, *args))
+      Response.new RestClient.send(method, url, *args)
     rescue RestClient::Exception => e
-      Response.new 'result' => e.message.upcase, 'response' => e.response
+      Response.new({:result => e.message.upcase, :response => e.response}.to_json)
     end
   end
 end
