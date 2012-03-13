@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.5 / (unreleased)
+
+* Raise SessionTokenException when `session_token` request is invalid.
+
 ## 0.0.4 / 2012-03-08
 
 * Check credit card token length as well as starting digit.
