@@ -95,6 +95,13 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
     assert_equal 'SESSIONTOKEN', @gateway.session_token
   end
 
+  def test_unsuccessful_session_token_request_raises_an_exception
+    stub_session_token_request.to_return(:status => 400, :body => '{}')
+    assert_raises SessionTokenException do
+      @gateway.session_token
+    end
+  end
+
 private
 
   def stub_availability_request
