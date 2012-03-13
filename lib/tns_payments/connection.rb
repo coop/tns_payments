@@ -62,6 +62,17 @@ module TNSPayments
       end
     end
 
+    def check_enrollment transaction
+      params = {
+        '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'SIMPLE', 'responseUrl' => 'http://google.com/'}},
+        'apiOperation' => 'CHECK_3DS_ENROLLMENT',
+        'cardDetails'  => {'session' => session_token},
+        'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
+      }
+      puts params.inspect
+      request :put, "/merchant/#{@merchant_id}/3DSecureId/1", params
+    end
+
   private
 
     def api_url
