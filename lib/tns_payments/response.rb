@@ -6,17 +6,17 @@ module TNSPayments
       @response = JSON.parse response
     end
 
-    def body
-      JSON.parse response.fetch('response') { '{}' }
+    def nested_response
+      JSON.parse @response.fetch('response') { '{}' }
     end
 
     def success?
-      %w[SUCCESS OPERATING].include? response['result'] || response['status']
+      %w[SUCCESS OPERATING].include? @response['result'] || @response['status']
     end
 
     def message
-      if body['result'] == 'ERROR'
-        body['error']['explanation']
+      if nested_response['result'] == 'ERROR'
+        nested_response['error']['explanation']
       else
         'Successful request'
       end
