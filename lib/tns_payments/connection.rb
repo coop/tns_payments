@@ -66,6 +66,7 @@ module TNSPayments
         'cardDetails'  => card_details(token),
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
       }
+
       request :put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_d_s_id}", params
     end
 
