@@ -64,7 +64,7 @@ module TNSPayments
 
     def check_enrollment transaction, token
       params = {
-        '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'SIMPLE', 'responseUrl' => 'http://google.com/'}},
+        '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => 'http://google.com/'}},
         'apiOperation' => 'CHECK_3DS_ENROLLMENT',
         'cardDetails'  => card_details(token),
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
@@ -98,7 +98,7 @@ module TNSPayments
 
       Response.new RestClient.send(method, url, *args)
     rescue RestClient::Exception => e
-      Response.new({:result => e.message.upcase, :response => e.response}.to_json)
+      Response.new({:result => e.message.upcase, :response => JSON.parse(e.response || '{}')}.to_json)
     end
   end
 end
