@@ -28,9 +28,9 @@ module TNSPayments
       transaction_id = transaction.transaction_id
       params         = {
         'apiOperation' => 'PAY',
-        'order'        => {'reference'               => transaction.reference},
-        'cardDetails'  => {purchase_token_key(token) => token},
-        'transaction'  => {'amount'                  => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
+        'order'        => {'reference'      => transaction.reference},
+        'cardDetails'  => {token_key(token) => token},
+        'transaction'  => {'amount'         => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
       }
 
       request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
@@ -62,11 +62,11 @@ module TNSPayments
       end
     end
 
-    def check_enrollment transaction
+    def check_enrollment transaction, token
       params = {
         '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'SIMPLE', 'responseUrl' => 'http://google.com/'}},
         'apiOperation' => 'CHECK_3DS_ENROLLMENT',
-        'cardDetails'  => {'session' => session_token},
+        'cardDetails'  => {token_key(token) => token},
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
       }
       puts params.inspect
@@ -75,22 +75,17 @@ module TNSPayments
 
   private
 
-    def api_url
-      "#{host}/api/rest/version/4"
-    end
-
     def encode_credentials
-      credentials = ['', @api_key].join(':')
-      'Basic ' << Base64.encode64(credentials)
+      'Basic ' + Base64.encode64(":#{@api_key}")
     end
 
-    def purchase_token_key token
+    def token_key token
       token =~ CREDIT_CARD_TOKEN_FORMAT ? 'cardToken' : 'session'
     end
 
     def request method, path, options = {}
       authorization = options.fetch(:authorization) { true }
-      url           = api_url << path
+      url           = "#{host}/api/rest/version/4#{path}"
       auth_headers  = {:Authorization => encode_credentials}
       headers       = {:content_type => 'Application/json;charset=UTF-8', :accept => '*/*'}
       headers.merge! auth_headers if authorization
