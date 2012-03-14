@@ -28,9 +28,9 @@ module TNSPayments
       transaction_id = transaction.transaction_id
       params         = {
         'apiOperation' => 'PAY',
-        'order'        => {'reference'      => transaction.reference},
         'cardDetails'  => card_details(token),
-        'transaction'  => {'amount'         => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
+        'order'        => {'reference' => transaction.reference},
+        'transaction'  => {'amount'    => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
       }
 
       request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
@@ -69,7 +69,6 @@ module TNSPayments
         'cardDetails'  => card_details(token),
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
       }
-      puts params.inspect
       request :put, "/merchant/#{@merchant_id}/3DSecureId/1", params
     end
 
