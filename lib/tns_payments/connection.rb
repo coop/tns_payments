@@ -98,7 +98,7 @@ module TNSPayments
 
       Response.new RestClient.send(method, url, *args)
     rescue RestClient::Exception => e
-      Response.new({:result => e.message.upcase, :response => e.response}.to_json)
+      Response.new({:result => e.message.upcase, :response => JSON.parse(e.response || '{}')}.to_json)
     end
   end
 end

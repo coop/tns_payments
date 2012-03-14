@@ -14,11 +14,11 @@ class TNSPayments::ResponseTest < MiniTest::Unit::TestCase
   end
 
   def test_message_when_error_request
-    response = "{\"result\":\"400 BAD REQUEST\",\"response\":\"{\\\"error\\\":{\\\"cause\\\":\\\"INVALID_REQUEST\\\",\\\"explanation\\\":\\\"Privilege(s) [HOSTED_PAYMENT_FORM] required\\\"},\\\"result\\\":\\\"ERROR\\\"}\"}"
-    assert_equal 'Privilege(s) [HOSTED_PAYMENT_FORM] required', Response.new(response).message
+    response = "{\"result\":\"401 UNAUTHORIZED\",\"response\":{\"error\":{\"cause\":\"INVALID_REQUEST\",\"explanation\":\"Invalid credentials.\"},\"result\":\"ERROR\"}}"
+    assert_equal 'Invalid credentials.', Response.new(response).message
   end
 
   def test_message_when_success_request
-    assert_equal 'Successful request', Response.new({:result => 'SUCCESS'}.to_json).message
+    assert_equal 'Successful request', Response.new({:result => 'SUCCESS', :response => {}}.to_json).message
   end
 end
