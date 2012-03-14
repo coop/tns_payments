@@ -29,7 +29,7 @@ module TNSPayments
       params         = {
         'apiOperation' => 'PAY',
         'order'        => {'reference'      => transaction.reference},
-        'cardDetails'  => {token_key(token) => token},
+        'cardDetails'  => card_details(token),
         'transaction'  => {'amount'         => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
       }
 
@@ -66,7 +66,7 @@ module TNSPayments
       params = {
         '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'SIMPLE', 'responseUrl' => 'http://google.com/'}},
         'apiOperation' => 'CHECK_3DS_ENROLLMENT',
-        'cardDetails'  => {token_key(token) => token},
+        'cardDetails'  => card_details(token),
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
       }
       puts params.inspect
@@ -77,6 +77,10 @@ module TNSPayments
 
     def encode_credentials
       'Basic ' + Base64.encode64(":#{@api_key}")
+    end
+
+    def card_details token
+      {token_key(token) => token}
     end
 
     def token_key token
