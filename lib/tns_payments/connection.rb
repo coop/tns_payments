@@ -68,15 +68,10 @@ module TNSPayments
         'cardDetails'  => card_details(token),
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
       }
-
       request :put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_d_s_id}", params
     end
 
   private
-
-    def encode_credentials
-      'Basic ' + Base64.encode64(":#{api_key}")
-    end
 
     def card_details token
       {token_key(token) => token}
@@ -87,18 +82,7 @@ module TNSPayments
     end
 
     def request method, path, options = {}
-      authorization = options.fetch(:authorization) { true }
-      url           = "#{host}/api/rest/version/4#{path}"
-      auth_headers  = {:Authorization => encode_credentials}
-      headers       = {:content_type => 'Application/json;charset=UTF-8', :accept => '*/*'}
-      headers.merge! auth_headers if authorization
-
-      args = [headers]
-      args.unshift(options.to_json) unless [:delete, :get, :head].include? method
-
-      Response.new RestClient.send(method, url, *args)
-    rescue RestClient::Exception => e
-      Response.new({:result => e.message.upcase, :response => JSON.parse(e.response || '{}')}.to_json)
+      Request.new(self, method, path, options).perform
     end
   end
 end
