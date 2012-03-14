@@ -1,6 +1,4 @@
 require 'base64'
-require 'json'
-require 'rest-client'
 
 module TNSPayments
   class Connection
