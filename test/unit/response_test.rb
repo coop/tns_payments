@@ -21,4 +21,9 @@ class TNSPayments::ResponseTest < MiniTest::Unit::TestCase
   def test_message_when_success_request
     assert_equal 'Successful request', Response.new({:result => 'SUCCESS', :response => {}}.to_json).message
   end
+
+  def test_raw_response_is_the_json
+    response = "{\"result\":\"401 UNAUTHORIZED\",\"response\":{\"error\":{\"cause\":\"INVALID_REQUEST\",\"explanation\":\"Invalid credentials.\"},\"result\":\"ERROR\"}}"
+    assert_equal response, Response.new(response).raw_response
+  end
 end
