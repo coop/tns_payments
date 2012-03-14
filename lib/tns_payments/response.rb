@@ -1,9 +1,13 @@
 module TNSPayments
   class Response
-    attr_reader :response
+    attr_reader :raw_response
 
     def initialize response
-      @response = JSON.parse response
+      @raw_response = response
+    end
+
+    def response
+      @response ||= JSON.parse(raw_response)
     end
 
     def success?
