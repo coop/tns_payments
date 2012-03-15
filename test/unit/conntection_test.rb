@@ -3,9 +3,7 @@ require 'webmock/minitest'
 
 class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
   def setup
-    @api_key     = '123api456'
-    @merchant_id = 'MERCHANT'
-    @gateway     = Connection.new :api_key => @api_key, :merchant_id => @merchant_id
+    @gateway = Connection.new :api_key => '123api456', :merchant_id => 'MERCHANT'
   end
 
   def test_available_is_true_when_tns_gateway_is_operating
@@ -122,7 +120,7 @@ private
   def stub_successful_refund_request transaction
     stub_refund_request(transaction).
       to_return :status => 200, :headers => {}, :body => <<-EOS
-         {"merchant":"#{@merchant_id}","order":{"id":#{transaction.order_id},"totalAuthorizedAmount":0.00,"totalCapturedAmount":0.00,"totalRefundedAmount":0.00},
+         {"merchant":"#{@gateway.merchant_id}","order":{"id":#{transaction.order_id},"totalAuthorizedAmount":0.00,"totalCapturedAmount":0.00,"totalRefundedAmount":0.00},
           "response":{"acquirerCode":"00","gatewayCode":"APPROVED"},"result":"SUCCESS","transaction":{"acquirer":{"id":"STGEORGE"},
           "amount":#{transaction.amount},"authorizationCode":"000582","batch":20110707,"currency":"AUD","id":"#{transaction.transaction_id}",
           "receipt":"110707000582","source":"INTERNET","terminal":"08845778","type":"REFUND"}}
@@ -180,7 +178,7 @@ private
   end
 
   def stub_session_token_request
-    stub_request(:post, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/session/).
+    stub_request(:post, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/session/).
       with :headers => {
              'Accept' => '*/*',
              'Accept-Encoding' => 'gzip, deflate',
@@ -190,7 +188,7 @@ private
   end
 
   def stub_session_token_purchase_request transaction, token
-    stub_request(:put, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
+    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'PAY',
              'order'        => {'reference' => transaction.reference.to_s},
@@ -206,7 +204,7 @@ private
   end
 
   def stub_credit_card_token_purchase_request transaction, token
-    stub_request(:put, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
+    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'PAY',
              'order'        => {'reference' => transaction.reference.to_s},
@@ -222,7 +220,7 @@ private
   end
 
   def stub_refund_request transaction
-    stub_request(:put, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
+    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'REFUND',
              'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction.transaction_id.to_s}
@@ -236,17 +234,17 @@ private
   end
 
   def stub_create_credit_card_token_request
-    stub_request(:post, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/token/).
+    stub_request(:post, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/token/).
       with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'Application/json;charset=UTF-8'}, :body => {})
   end
 
   def stub_delete_credit_card_token_request
-    stub_request(:delete, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/token\/\d{16}/).
+    stub_request(:delete, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/token\/\d{16}/).
       with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'Application/json;charset=UTF-8'}, :body => {})
   end
 
   def stub_successful_check_enrollment_request transaction, token
-    stub_request(:put, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/3DSecureId\/#{transaction.three_d_s_id}/).
+    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/3DSecureId\/#{transaction.three_d_s_id}/).
       with(:body => JSON.generate({
            '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => 'http://google.com/'}},
            'apiOperation' => 'CHECK_3DS_ENROLLMENT',

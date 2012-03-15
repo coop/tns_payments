@@ -6,7 +6,7 @@ module TNSPayments
   class Connection
     CREDIT_CARD_TOKEN_FORMAT = /^9\d{15}/
 
-    attr_accessor :host
+    attr_accessor :api_key, :host, :merchant_id
     attr_writer :session_token
 
     def available?
@@ -14,8 +14,7 @@ module TNSPayments
     end
 
     def initialize options
-      @api_key     = options[:api_key]
-      @merchant_id = options[:merchant_id]
+      self.api_key, self.merchant_id = options[:api_key], options[:merchant_id]
       self.host    = options.fetch(:host) { 'https://secure.ap.tnspayments.com' }
     end
 
@@ -33,7 +32,7 @@ module TNSPayments
         'transaction'  => {'amount'                  => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
       }
 
-      request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
+      request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
     end
 
     def refund transaction
@@ -44,20 +43,20 @@ module TNSPayments
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
       }
 
-      request :put, "/merchant/#{@merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
+      request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
     end
 
     def create_credit_card_token
-      request :post, "/merchant/#{@merchant_id}/token"
+      request :post, "/merchant/#{merchant_id}/token"
     end
 
     def delete_credit_card_token token
-      request :delete, "/merchant/#{@merchant_id}/token/#{token}"
+      request :delete, "/merchant/#{merchant_id}/token/#{token}"
     end
 
     def session_token
       @session_token ||= begin
-        response = request :post, "/merchant/#{@merchant_id}/session"
+        response = request :post, "/merchant/#{merchant_id}/session"
         response.response.fetch('session') { raise(SessionTokenException.new, response.message) }
       end
     end
@@ -70,7 +69,7 @@ module TNSPayments
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
       }
 
-      request :put, "/merchant/#{@merchant_id}/3DSecureId/#{transaction.three_d_s_id}", params
+      request :put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_d_s_id}", params
     end
 
   private
@@ -80,7 +79,7 @@ module TNSPayments
     end
 
     def encode_credentials
-      credentials = ['', @api_key].join(':')
+      credentials = ['', api_key].join(':')
       'Basic ' << Base64.encode64(credentials)
     end
 
