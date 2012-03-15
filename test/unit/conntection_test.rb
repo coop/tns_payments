@@ -102,6 +102,16 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
     end
   end
 
+  def test_successful_check_enrollment_request_returns_card_enrolled
+    transaction = mock_transaction
+    transaction.expect :three_d_s_id, 'randomstring'
+    stub_successful_session_token_request
+    token = @gateway.session_token
+    stub_successful_check_enrollment_request transaction, token
+    response = @gateway.check_enrollment transaction, token
+    assert_equal 'CARD_ENROLLED', response['3DSecure']['gatewayCode']
+  end
+
 private
 
   def stub_availability_request
@@ -233,6 +243,22 @@ private
   def stub_delete_credit_card_token_request
     stub_request(:delete, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/token\/\d{16}/).
       with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'Application/json;charset=UTF-8'}, :body => {})
+  end
+
+  def stub_successful_check_enrollment_request transaction, token
+    stub_request(:put, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/3DSecureId\/#{transaction.three_d_s_id}/).
+      with(:body => JSON.generate({
+           '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => 'http://google.com/'}},
+           'apiOperation' => 'CHECK_3DS_ENROLLMENT',
+           'cardDetails'  => {'session' => token},
+           'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
+         }),
+         :headers => {
+           'Accept'          => '*/*',
+           'Accept-Encoding' => 'gzip, deflate',
+           'Content-Length'  => '237',
+           'Content-Type'    => 'Application/json;charset=UTF-8'
+         })
   end
 
   def mock_transaction

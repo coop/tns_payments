@@ -62,15 +62,15 @@ module TNSPayments
       end
     end
 
-    def check_enrollment transaction
+    def check_enrollment transaction, token
       params = {
-        '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'SIMPLE', 'responseUrl' => 'http://google.com/'}},
+        '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => 'http://google.com/'}},
         'apiOperation' => 'CHECK_3DS_ENROLLMENT',
-        'cardDetails'  => {'session' => session_token},
+        'cardDetails'  => {'session' => token},
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
       }
-      puts params.inspect
-      request :put, "/merchant/#{@merchant_id}/3DSecureId/1", params
+
+      request :put, "/merchant/#{@merchant_id}/3DSecureId/#{transaction.three_d_s_id}", params
     end
 
   private
