@@ -107,7 +107,7 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
     token = @gateway.session_token
     stub_successful_check_enrollment_request transaction, token
     response = @gateway.check_enrollment transaction, token
-    assert_equal 'CARD_ENROLLED', response['3DSecure']['gatewayCode']
+    assert_equal 'CARD_ENROLLED', response.response['response']['3DSecure']['gatewayCode']
   end
 
 private
@@ -256,7 +256,8 @@ private
            'Accept-Encoding' => 'gzip, deflate',
            'Content-Length'  => '237',
            'Content-Type'    => 'Application/json;charset=UTF-8'
-         })
+         }).
+      to_return :status => 200, :headers => {}, :body => "{\"3DSecure\":{\"authenticationRedirect\":{\"customized\":{\"acsUrl\":\"https://secure.ap.tnspayments.com:443/acs/MastercardACS/4272b87b-2cc0-4232-a96e-e678ecbe7455\",\"paReq\":\"eAFVkd1ugkAQhe9NfAfCfV1ghVIzrNFq1aY/pNqY9I7AKCQCukILfZ2+SZ+sswq1vePMcGbPfAPDKt1p7yiPSZ55utkzdA2zMI+SbOvpr6u7K1cfim4HVrFEnCwxLCUKeMTjMdiilkSezrlpmJbh6gL80QseBDTjBE3rWcBaSS4ZxkFWCAjCw3jxJGyLG44NrJGQolxMhGnxvu1cu8DOGrIgRTGlMXUU1NocZa49FBGwUx3CvMwKWQvXcoC1Akq5E3FR7AeMITnJGJOvF+YpMNUDdknjlyrXkfaqkkg8R9HmrZotNx8pn8b17HNdGfexX64nfQ+Y+gOioEBhqa25aWsWH3BnYFPeUx2CVCUSs7GvfX8RA4MWPJdgr14anYWpGn8LQGwlwW9XaRVgtc8zpJEE8/cb2CX27VwhDQuCZ7f0bige7xOSpqGmJITJ5AYRbwQwZWXN3QjJ6axU+XfubucHAPGz0w==\"}},\"summaryStatus\":\"CARD_ENROLLED\",\"xid\":\"OddfZxGSfwm3EhyGzWx0JhPuWD4=\"},\"3DSecureId\":\"#{transaction.three_d_s_id}\",\"merchant\":\"#{@gateway.merchant_id}\",\"response\":{\"3DSecure\":{\"gatewayCode\":\"CARD_ENROLLED\"}}}"
   end
 
   def mock_transaction
