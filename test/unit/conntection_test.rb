@@ -64,29 +64,29 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
   end
 
   def test_create_credit_card_token_successfully_stores_creditcard
-    stub_successful_create_credit_card_token_request
-    assert @gateway.create_credit_card_token.success?
+    stub_successful_create_credit_card_token_request 'SESSIONTOKEN'
+    assert @gateway.create_credit_card_token('SESSIONTOKEN').success?
   end
 
   def test_create_credit_card_token_returns_valid_card_token_when_successful
-    stub_successful_create_credit_card_token_request
-    token = @gateway.create_credit_card_token.response['cardToken']
+    stub_successful_create_credit_card_token_request 'SESSIONTOKEN'
+    token = @gateway.create_credit_card_token('SESSIONTOKEN').response['cardToken']
     assert_equal 16, token.size
     assert_match Connection::CREDIT_CARD_TOKEN_FORMAT, token
   end
 
   def test_create_credit_card_token_unsuccessfully_attempts_to_store_credit_card
-    stub_unsuccessful_create_credit_card_token_request
-    refute @gateway.create_credit_card_token.success?
+    stub_unsuccessful_create_credit_card_token_request 'SESSIONTOKEN'
+    refute @gateway.create_credit_card_token('SESSIONTOKEN').success?
   end
 
   def test_delete_credit_card_token_successfully_deletes_a_stored_credit_card_token
-    stub_successful_delete_credit_card_token_request
+    stub_successful_delete_credit_card_token_request '9123456781234567'
     assert @gateway.delete_credit_card_token('9123456781234567').success?
   end
 
   def test_delete_credit_card_token_unsuccessfully_attempts_to_delete_a_stored_credit_card
-    stub_unsuccessful_delete_credit_card_token_request
+    stub_unsuccessful_delete_credit_card_token_request '9123456781234567'
     refute @gateway.delete_credit_card_token('9123456781234567').success?
   end
 
@@ -144,23 +144,23 @@ private
       to_return(:status => 200, :body => '{"result":"FAILURE"}', :headers => {})
   end
 
-  def stub_successful_create_credit_card_token_request
-    stub_create_credit_card_token_request.
+  def stub_successful_create_credit_card_token_request token
+    stub_create_credit_card_token_request(token).
       to_return(:status => 200, :body => %{{"result":"SUCCESS", "response":{"gatewayCode":"BASIC_VERIFICATION_SUCCESSFUL"}, "card":{"number":"xxxxxxxxxxxxxxxx", "scheme":"MASTERCARD", "expiry":{"month":"5", "year":"13"}}, "cardToken":"9102370788509763"}}, :headers => {})
   end
 
-  def stub_unsuccessful_create_credit_card_token_request
-    stub_create_credit_card_token_request.
+  def stub_unsuccessful_create_credit_card_token_request token
+    stub_create_credit_card_token_request(token).
       to_return(:status => 200, :body => '{"result":"FAILURE"}', :headers => {})
   end
 
-  def stub_successful_delete_credit_card_token_request
-    stub_delete_credit_card_token_request.
+  def stub_successful_delete_credit_card_token_request token
+    stub_delete_credit_card_token_request(token).
       to_return(:status => 200, :body => '{"result":"SUCCESS"}', :headers => {})
   end
 
-  def stub_unsuccessful_delete_credit_card_token_request
-    stub_delete_credit_card_token_request.
+  def stub_unsuccessful_delete_credit_card_token_request token
+    stub_delete_credit_card_token_request(token).
       to_return(:status => 200, :body => '{"result":"FAILURE"}', :headers => {})
   end
 
@@ -225,14 +225,24 @@ private
            }
   end
 
-  def stub_create_credit_card_token_request
+  def stub_create_credit_card_token_request token
     stub_request(:post, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/token/).
-      with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'Application/json;charset=UTF-8'}, :body => {})
+      with :body => JSON.generate({
+             'cardDetails' => {'session' => token}
+           }),
+           :headers => {
+             'Accept'       => '*/*',
+             'Content-Type' => 'Application/json;charset=UTF-8'
+           }
   end
 
-  def stub_delete_credit_card_token_request
-    stub_request(:delete, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/token\/\d{16}/).
-      with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'Application/json;charset=UTF-8'}, :body => {})
+  def stub_delete_credit_card_token_request token
+    stub_request(:delete, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/token\/#{token}/).
+      with :body    => {},
+           :headers => {
+             'Accept'       => '*/*',
+             'Content-Type' => 'Application/json;charset=UTF-8'
+           }
   end
 
   def mock_transaction

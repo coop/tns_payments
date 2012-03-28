@@ -46,8 +46,12 @@ module TNSPayments
       request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
     end
 
-    def create_credit_card_token
-      request :post, "/merchant/#{merchant_id}/token"
+    def create_credit_card_token token
+      params = {
+        'cardDetails' => card_details(token)
+      }
+
+      request :post, "/merchant/#{merchant_id}/token", params
     end
 
     def delete_credit_card_token token
