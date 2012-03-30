@@ -1,7 +1,9 @@
 # CHANGELOG
 
-## 0.0.5 / (unreleased)
+## 0.0.5 / 2012-03-29
 
+* Tokenize credit card.
+* Request gets it's own class.
 * Raise SessionTokenException when `session_token` request is invalid.
 
 ## 0.0.4 / 2012-03-08

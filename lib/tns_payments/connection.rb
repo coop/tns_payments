@@ -4,7 +4,12 @@ module TNSPayments
   class Connection
     CREDIT_CARD_TOKEN_FORMAT = /^9\d{15}/
 
+<<<<<<< HEAD
     attr_accessor :api_key, :host, :merchant_id
+=======
+    attr_accessor :host
+    attr_reader :api_key, :merchant_id
+>>>>>>> master
     attr_writer :session_token
 
     def available?
@@ -44,8 +49,12 @@ module TNSPayments
       request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
     end
 
-    def create_credit_card_token
-      request :post, "/merchant/#{merchant_id}/token"
+    def create_credit_card_token token
+      params = {
+        'cardDetails' => card_details(token)
+      }
+
+      request :post, "/merchant/#{merchant_id}/token", params
     end
 
     def delete_credit_card_token token
