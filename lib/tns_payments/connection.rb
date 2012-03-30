@@ -4,12 +4,7 @@ module TNSPayments
   class Connection
     CREDIT_CARD_TOKEN_FORMAT = /^9\d{15}/
 
-<<<<<<< HEAD
     attr_accessor :api_key, :host, :merchant_id
-=======
-    attr_accessor :host
-    attr_reader :api_key, :merchant_id
->>>>>>> master
     attr_writer :session_token
 
     def available?
@@ -68,15 +63,24 @@ module TNSPayments
       end
     end
 
-    def check_enrollment transaction, token
+    def check_enrollment transaction, token, postback_url
       params = {
-        '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => 'http://google.com/'}},
+        '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => postback_url}},
         'apiOperation' => 'CHECK_3DS_ENROLLMENT',
         'cardDetails'  => card_details(token),
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
       }
 
       request :put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_d_s_id}", params
+    end
+
+    def process_acs_result three_d_s_id, pa_res
+      params = {
+        '3DSecure'     => {'paRes' => pa_res},
+        'apiOperation' => 'PROCESS_ACS_RESULT'
+      }
+
+      request :post, "/merchant/#{merchant_id}/3DSecureId/#{three_d_s_id}", params
     end
 
   private

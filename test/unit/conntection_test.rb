@@ -105,8 +105,8 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
     transaction.expect :three_d_s_id, 'randomstring'
     stub_successful_session_token_request
     token = @gateway.session_token
-    stub_successful_check_enrollment_request transaction, token
-    response = @gateway.check_enrollment transaction, token
+    stub_successful_check_enrollment_request transaction, token, 'http://google.com/'
+    response = @gateway.check_enrollment transaction, token, 'http://google.com/'
     assert_equal 'CARD_ENROLLED', response.response['response']['3DSecure']['gatewayCode']
   end
 
@@ -234,7 +234,7 @@ private
   end
 
   def stub_create_credit_card_token_request token
-    stub_request(:post, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/token/).
+    stub_request(:post, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/token/).
       with :body => JSON.generate({
              'cardDetails' => {'session' => token}
            }),
@@ -245,7 +245,7 @@ private
   end
 
   def stub_delete_credit_card_token_request token
-    stub_request(:delete, /https:\/\/:#{@api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@merchant_id}\/token\/#{token}/).
+    stub_request(:delete, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/token\/#{token}/).
       with :body    => {},
            :headers => {
              'Accept'       => '*/*',
@@ -253,10 +253,10 @@ private
            }
   end
 
-  def stub_successful_check_enrollment_request transaction, token
+  def stub_successful_check_enrollment_request transaction, token, postback_url
     stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/3DSecureId\/#{transaction.three_d_s_id}/).
       with(:body => JSON.generate({
-           '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => 'http://google.com/'}},
+           '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => postback_url}},
            'apiOperation' => 'CHECK_3DS_ENROLLMENT',
            'cardDetails'  => {'session' => token},
            'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
