@@ -71,16 +71,16 @@ module TNSPayments
         'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
       }
 
-      request :put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_d_s_id}", params
+      request :put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_domain_id}", params
     end
 
-    def process_acs_result three_d_s_id, pa_res
+    def process_acs_result three_domain_id, pa_res
       params = {
         '3DSecure'     => {'paRes' => pa_res},
         'apiOperation' => 'PROCESS_ACS_RESULT'
       }
 
-      request :post, "/merchant/#{merchant_id}/3DSecureId/#{three_d_s_id}", params
+      request :post, "/merchant/#{merchant_id}/3DSecureId/#{three_domain_id}", params
     end
 
   private
