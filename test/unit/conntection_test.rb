@@ -110,6 +110,17 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
     assert_equal 'CARD_ENROLLED', response.response['response']['3DSecure']['gatewayCode']
   end
 
+  def test_successful_process_acs_result_request_returns_authorized
+    # transaction = mock_transaction
+    # transaction.expect :three_domain_id, 'randomstring'
+    # stub_successful_session_token_request
+    # token = @gateway.session_token
+
+    stub_successful_process_acs_result_request 'three_domain_id', 'pa_res'
+    response = @gateway.process_acs_result 'three_domain_id', 'pa_res'
+    assert_equal 'AUTHENTICATION_SUCCESSFUL', response.response['response']['3DSecure']['gatewayCode']
+  end
+
 private
 
   def stub_availability_request
@@ -268,6 +279,21 @@ private
            'Content-Type'    => 'Application/json;charset=UTF-8'
          }).
       to_return :status => 200, :headers => {}, :body => "{\"3DSecure\":{\"authenticationRedirect\":{\"customized\":{\"acsUrl\":\"https://secure.ap.tnspayments.com:443/acs/MastercardACS/4272b87b-2cc0-4232-a96e-e678ecbe7455\",\"paReq\":\"eAFVkd1ugkAQhe9NfAfCfV1ghVIzrNFq1aY/pNqY9I7AKCQCukILfZ2+SZ+sswq1vePMcGbPfAPDKt1p7yiPSZ55utkzdA2zMI+SbOvpr6u7K1cfim4HVrFEnCwxLCUKeMTjMdiilkSezrlpmJbh6gL80QseBDTjBE3rWcBaSS4ZxkFWCAjCw3jxJGyLG44NrJGQolxMhGnxvu1cu8DOGrIgRTGlMXUU1NocZa49FBGwUx3CvMwKWQvXcoC1Akq5E3FR7AeMITnJGJOvF+YpMNUDdknjlyrXkfaqkkg8R9HmrZotNx8pn8b17HNdGfexX64nfQ+Y+gOioEBhqa25aWsWH3BnYFPeUx2CVCUSs7GvfX8RA4MWPJdgr14anYWpGn8LQGwlwW9XaRVgtc8zpJEE8/cb2CX27VwhDQuCZ7f0bige7xOSpqGmJITJ5AYRbwQwZWXN3QjJ6axU+XfubucHAPGz0w==\"}},\"summaryStatus\":\"CARD_ENROLLED\",\"xid\":\"OddfZxGSfwm3EhyGzWx0JhPuWD4=\"},\"3DSecureId\":\"#{transaction.three_domain_id}\",\"merchant\":\"#{@gateway.merchant_id}\",\"response\":{\"3DSecure\":{\"gatewayCode\":\"CARD_ENROLLED\"}}}"
+  end
+
+  def stub_successful_process_acs_result_request three_domain_id, pa_res
+    stub_request(:post, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/3DSecureId\/#{three_domain_id}/).
+      with(:body => JSON.generate({
+           '3DSecure'     => {'paRes' => pa_res},
+           'apiOperation' => 'PROCESS_ACS_RESULT'
+         }),
+         :headers => {
+           'Accept'          => '*/*',
+           'Accept-Encoding' => 'gzip, deflate',
+           'Content-Length'  => '67',
+           'Content-Type'    => 'Application/json;charset=UTF-8'
+         }).
+      to_return :status => 200, :headers => {}, :body => "{\"response\":{\"3DSecure\":{\"gatewayCode\":\"AUTHENTICATION_SUCCESSFUL\"}}}"
   end
 
   def mock_transaction
