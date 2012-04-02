@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.6 / 2012-04-02
+
+* 3D Secure
+
 ## 0.0.5 / 2012-03-29
 
 * Tokenize credit card.
