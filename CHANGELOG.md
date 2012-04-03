@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.8 / (unreleased)
+
+* Refactored order_id minimum into separate class.
+
 ## 0.0.7 / 2012-04-03
 
 * Set order_id to 10000000000 plus the passed order_id.
