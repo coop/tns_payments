@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.0.7 / 2012-04-03
+
+* Set order_id to 10000000000 plus the passed order_id.
+
 ## 0.0.6 / 2012-04-02
 
 * 3D Secure
