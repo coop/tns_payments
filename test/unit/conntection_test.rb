@@ -199,7 +199,7 @@ private
   end
 
   def stub_session_token_purchase_request transaction, token
-    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
+    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{TNSPayments::Connection::MINIMUM_ORDER_ID + transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'PAY',
              'order'        => {'reference' => transaction.reference.to_s},
@@ -215,7 +215,7 @@ private
   end
 
   def stub_credit_card_token_purchase_request transaction, token
-    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
+    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{TNSPayments::Connection::MINIMUM_ORDER_ID + transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'PAY',
              'order'        => {'reference' => transaction.reference.to_s},
@@ -231,7 +231,7 @@ private
   end
 
   def stub_refund_request transaction
-    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
+    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{TNSPayments::Connection::MINIMUM_ORDER_ID + transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'REFUND',
              'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction.transaction_id.to_s}

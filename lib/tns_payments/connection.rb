@@ -3,6 +3,7 @@ require 'base64'
 module TNSPayments
   class Connection
     CREDIT_CARD_TOKEN_FORMAT = /^9\d{15}/
+    MINIMUM_ORDER_ID         = 10000000000
 
     attr_accessor :api_key, :host, :merchant_id
     attr_writer :session_token
@@ -21,7 +22,7 @@ module TNSPayments
     end
 
     def purchase transaction, token
-      order_id       = transaction.order_id
+      order_id       = MINIMUM_ORDER_ID + transaction.order_id.to_i
       transaction_id = transaction.transaction_id
       params         = {
         'apiOperation' => 'PAY',
@@ -34,7 +35,7 @@ module TNSPayments
     end
 
     def refund transaction
-      order_id       = transaction.order_id
+      order_id       = MINIMUM_ORDER_ID + transaction.order_id.to_i
       transaction_id = transaction.transaction_id
       params         = {
         'apiOperation' => 'REFUND',
