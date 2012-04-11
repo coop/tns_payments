@@ -82,17 +82,17 @@ module TNSPayments
       end
     end
 
-    # Public: Indicates the name of the field that failed validation. This field
-    #         is returned only if the cause is INVALID_REQUEST and a field level
-    #         validation error was encountered.
+    # Public: Indicates the name of the field that failed validation. This
+    #         field is returned only if the cause is INVALID_REQUEST and a
+    #         field level validation error was encountered.
     #
     # Returns name of invalid field.
     def field
       response['error']['field']
     end
 
-    # Public: Indicates the code that helps the support team to quickly identify
-    #         the exact cause of the error.
+    # Public: Indicates the code that helps the support team to quickly
+    #         identify the exact cause of the error.
     #
     # Returns a support code.
     def support_code
