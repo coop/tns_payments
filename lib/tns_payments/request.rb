@@ -27,7 +27,8 @@ module TNSPayments
 
       Response.new RestClient::Request.execute(args)
     rescue RestClient::Exception => e
-      Response.new({:result => e.message.upcase, :response => JSON.parse(e.response || '{}')}.to_json)
+      ErrorResponse.new e.response
+      # Response.new({:result => e.message.upcase, :response => JSON.parse(e.response || '{}')}.to_json)
     end
 
   private
