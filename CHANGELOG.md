@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.0.8 / (unreleased)
+## 0.0.8 / 2012-04-11
 
 * Default open_timeout and read_timeout to something sensible.
 * Refactored order_id minimum into separate class.
