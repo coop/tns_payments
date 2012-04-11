@@ -1,6 +1,7 @@
 require 'tns_payments/connection'
 require 'tns_payments/request'
 require 'tns_payments/response'
+require 'tns_payments/error_response'
 require 'tns_payments/transaction'
 require 'tns_payments/version'
 
