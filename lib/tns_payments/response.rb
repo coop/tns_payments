@@ -1,3 +1,5 @@
+require 'forwardable'
+
 module TNSPayments
   class Response
     extend Forwardable
