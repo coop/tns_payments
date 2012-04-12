@@ -21,6 +21,8 @@ module TNSPayments
     def result
       if response.has_key?('status')
         response['status'] == 'OPERATING' ? 'SUCCESS' : 'ERROR'
+      elsif response.has_key?('3DSecure')
+        'SUCCESS'
       else
         response['result']
       end
