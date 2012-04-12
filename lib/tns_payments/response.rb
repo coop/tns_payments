@@ -1,13 +1,8 @@
-require 'forwardable'
-
 module TNSPayments
   class Response
     extend Forwardable
 
     attr_reader :raw_response
-    attr_writer :response
-
-    def_delegators :@raw_response, :code, :cookies, :headers
 
     def initialize response
       @raw_response = response
@@ -20,19 +15,32 @@ module TNSPayments
       @response ||= JSON.parse(raw_response)
     end
 
-    # Public: Determine if the request was successful.
+    # Public: The result of the request.
+    #
+    # Returns a string.
+    def result
+      if response.has_key?('status')
+        response['status'] == 'OPERATING' ? 'SUCCESS' : 'ERROR'
+      else
+        response['result']
+      end
+    end
+
+    # Public: Check if the request was successful.
     #
     # Returns boolean.
     def success?
-      %w[SUCCESS OPERATING].include? response['result'] || response['status']
+      result == 'SUCCESS'
     end
 
+    # Public: Unuseful message.
+    #
+    # Returns a string.
     def message
-      result = response['response'].fetch('result') { 'SUCCESS' }
-      if result == 'ERROR'
-        response['response']['error']['explanation']
-      else
+      if success?
         'Successful request'
+      else
+        ErrorResponse.new(raw_response).explanation
       end
     end
   end

@@ -94,7 +94,7 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
   end
 
   def test_unsuccessful_session_token_request_raises_an_exception
-    stub_session_token_request.to_return(:status => 400, :body => '{}')
+    stub_session_token_request.to_return(:status => 400, :body => '{"error":{"cause":"Invalid merchant_id"}}')
     assert_raises SessionTokenException do
       @gateway.session_token
     end

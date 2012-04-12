@@ -86,6 +86,11 @@ class TNSPayments::ErrorResponseTest < MiniTest::Unit::TestCase
     assert_equal 'No support code for INVALID_REQUEST', TNSPayments::ErrorResponse.new(json).support_code
   end
 
+  def test_timedout
+    json = JSON.generate({'error' => {'cause' => 'REQUEST_TIMEDOUT'}})
+    assert TNSPayments::ErrorResponse.new(json).timedout?
+  end
+
   def test_success_is_false
     refute TNSPayments::ErrorResponse.new('{}').success?
   end

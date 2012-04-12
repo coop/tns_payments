@@ -31,6 +31,13 @@ module TNSPayments
       cause == 'SERVER_FAILED'
     end
 
+    # Public: Check if the request timed out.
+    #
+    # Returns boolean.
+    def timedout?
+      cause == 'REQUEST_TIMEDOUT'
+    end
+
     # Public: Broadly categorizes the cause of the error.
     #
     # Returns string.

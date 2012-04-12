@@ -61,7 +61,11 @@ module TNSPayments
     def session_token
       @session_token ||= begin
         response = request :post, "/merchant/#{merchant_id}/session"
-        response.response.fetch('session') { raise(SessionTokenException.new, response.message) }
+        if response.success?
+          response.response.fetch('session')
+        else
+          raise SessionTokenException.new, response.explanation
+        end
       end
     end
 

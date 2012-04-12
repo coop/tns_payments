@@ -2,7 +2,7 @@ require 'helper'
 
 class TNSPayments::ResponseTest < MiniTest::Unit::TestCase
   def test_success_when_operating
-    assert Response.new({:result => 'OPERATING'}.to_json).success?
+    assert Response.new({:status => 'OPERATING'}.to_json).success?
   end
 
   def test_success_when_success
@@ -14,7 +14,7 @@ class TNSPayments::ResponseTest < MiniTest::Unit::TestCase
   end
 
   def test_message_when_error_request
-    response = "{\"result\":\"401 UNAUTHORIZED\",\"response\":{\"error\":{\"cause\":\"INVALID_REQUEST\",\"explanation\":\"Invalid credentials.\"},\"result\":\"ERROR\"}}"
+    response = "{\"result\":\"401 UNAUTHORIZED\",\"error\":{\"cause\":\"INVALID_REQUEST\",\"explanation\":\"Invalid credentials.\"},\"result\":\"ERROR\"}"
     assert_equal 'Invalid credentials.', Response.new(response).message
   end
 
