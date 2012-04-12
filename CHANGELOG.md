@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.0.9 / 2012-04-12
+
+* Error Responses get their own class in an attempt to provide consistency.
+* Added TomDoc documentation.
+* Separated concerns in Request class.
+
 ## 0.0.8 / 2012-04-11
 
 * Default open_timeout and read_timeout to something sensible.
