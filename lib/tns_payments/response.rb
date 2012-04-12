@@ -1,7 +1,5 @@
 module TNSPayments
   class Response
-    extend Forwardable
-
     attr_reader :raw_response
 
     def initialize response
