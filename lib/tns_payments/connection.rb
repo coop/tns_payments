@@ -38,7 +38,11 @@ module TNSPayments
         'apiOperation' => 'PAY',
         'cardDetails'  => card_details(token),
         'order'        => {'reference' => transaction.reference},
-        'transaction'  => {'amount'    => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
+        'transaction'  => {
+          'amount'    => transaction.amount.to_s,
+          'currency'  => transaction.currency,
+          'reference' => transaction_id.to_s
+        }
       }
 
       request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
@@ -53,7 +57,11 @@ module TNSPayments
       transaction_id = transaction.transaction_id
       params         = {
         'apiOperation' => 'REFUND',
-        'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction_id.to_s}
+        'transaction'  => {
+          'amount'    => transaction.amount.to_s,
+          'currency'  => transaction.currency,
+          'reference' => transaction_id.to_s
+        }
       }
 
       request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
@@ -98,10 +106,18 @@ module TNSPayments
     # Returns a Response object.
     def check_enrollment transaction, token, postback_url
       params = {
-        '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => postback_url}},
+        '3DSecure'     => {
+          'authenticationRedirect' => {
+            'pageGenerationMode'   => 'CUSTOMIZED',
+            'responseUrl'          => postback_url
+          }
+        },
         'apiOperation' => 'CHECK_3DS_ENROLLMENT',
         'cardDetails'  => card_details(token),
-        'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency}
+        'transaction'  => {
+          'amount'   => transaction.amount.to_s,
+          'currency' => transaction.currency
+        }
       }
 
       request :put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_domain_id}", params
