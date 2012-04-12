@@ -7,6 +7,9 @@ module TNSPayments
     attr_accessor :api_key, :host, :merchant_id
     attr_writer :session_token
 
+    # Public: Request to check that the gateway is operating.
+    #
+    # Returns a boolean.
     def available?
       request(:get, '/information', :authorization => false).success?
     end
@@ -16,10 +19,17 @@ module TNSPayments
       self.host = options.fetch(:host) { 'https://secure.ap.tnspayments.com' }
     end
 
+    # Public: Payment form url that includes a session token.
+    #
+    # Returns a url.
     def payment_form_url
       "#{host}/form/#{session_token}"
     end
 
+    # Public: A single transaction to authorise the payment and transfer funds
+    #         from the cardholder's account to your account.
+    #
+    # Returns a Response object.
     def purchase transaction, token
       transaction    = Transaction.new transaction
       order_id       = transaction.order_id
@@ -34,6 +44,9 @@ module TNSPayments
       request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
     end
 
+    # Public: Request to refund previously captured funds.
+    #
+    # Returns a Response object.
     def refund transaction
       transaction    = Transaction.new transaction
       order_id       = transaction.order_id.to_i
@@ -46,6 +59,9 @@ module TNSPayments
       request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
     end
 
+    # Public: Request to store a card for later retrieval via token.
+    #
+    # Returns a Response object.
     def create_credit_card_token token
       params = {
         'cardDetails' => card_details(token)
@@ -54,10 +70,18 @@ module TNSPayments
       request :post, "/merchant/#{merchant_id}/token", params
     end
 
+    # Public:
+    #
+    # Returns a Response object.
     def delete_credit_card_token token
       request :delete, "/merchant/#{merchant_id}/token/#{token}"
     end
 
+    # Public: Request to create a Form Session. A Form Session is used by the
+    #         Hosted Payment Form service to temporarily store card details so
+    #         that the merchant does not need to handle these details directly.
+    #
+    # Returns a Response object.
     def session_token
       @session_token ||= begin
         response = request :post, "/merchant/#{merchant_id}/session"
@@ -69,6 +93,9 @@ module TNSPayments
       end
     end
 
+    # Public: Request to check a cardholder's enrollment in the 3DSecure scheme.
+    #
+    # Returns a Response object.
     def check_enrollment transaction, token, postback_url
       params = {
         '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => postback_url}},
@@ -80,6 +107,11 @@ module TNSPayments
       request :put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_domain_id}", params
     end
 
+    # Public: Interprets the authentication response returned from the card
+    #         Issuer's Access Control Server (ACS) after the cardholder
+    #         completes the authentication process.
+    #
+    # Returns a Response object.
     def process_acs_result three_domain_id, pa_res
       params = {
         '3DSecure'     => {'paRes' => pa_res},

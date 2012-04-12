@@ -8,6 +8,9 @@ require 'tns_payments/version'
 module TNSPayments
   class SessionTokenException < Exception; end
 
+  # Public: A proxy method to Connection.new.
+  #
+  # Returns a new Connection.
   def self.new options = {}
     Connection.new options
   end
