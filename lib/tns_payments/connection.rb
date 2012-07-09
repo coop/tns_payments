@@ -41,7 +41,7 @@ module TNSPayments
         'transaction'  => {
           'amount'    => transaction.amount.to_s,
           'currency'  => transaction.currency,
-          'reference' => transaction.reference
+          'reference' => transaction.reference.to_s
         }
       }
 
@@ -60,7 +60,7 @@ module TNSPayments
         'transaction'  => {
           'amount'    => transaction.amount.to_s,
           'currency'  => transaction.currency,
-          'reference' => transaction_id.to_s
+          'reference' => transaction.reference.to_s
         }
       }
 
