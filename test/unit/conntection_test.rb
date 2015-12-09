@@ -210,7 +210,7 @@ private
            :headers => {
              'Accept' => '*/*',
              'Accept-Encoding' => 'gzip, deflate',
-             'Content-Length'  => '158',
+             'Content-Length'  => '153',
              'Content-Type'    => 'Application/json;charset=UTF-8'
            }
   end
@@ -227,7 +227,7 @@ private
            :headers => {
              'Accept' => '*/*',
              'Accept-Encoding' => 'gzip, deflate',
-             'Content-Length'  => '164',
+             'Content-Length'  => '159',
              'Content-Type'    => 'Application/json;charset=UTF-8'
            }
   end
@@ -305,7 +305,7 @@ private
     mock.expect :currency, 'AUD'
     mock.expect :order_id, 10000000001
     mock.expect :transaction_id, 1
-    mock.expect :reference, 'AUD123'
+    mock.expect :reference, '1'
     mock
   end
 end
