@@ -306,6 +306,7 @@ private
     mock.expect :order_id, 10000000001
     mock.expect :transaction_id, 1
     mock.expect :reference, '1'
+    mock.expect :methods, []
     mock
   end
 end
