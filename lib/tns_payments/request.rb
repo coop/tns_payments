@@ -40,7 +40,7 @@ module TNSPayments
     rescue RestClient::Exception => e
       response = e.response
 
-      if response.message == 'Request Timeout'
+      if e.is_a?(RestClient::RequestTimeout)
         response = JSON.generate({:error => {:cause => 'REQUEST_TIMEDOUT'}})
       end
 
