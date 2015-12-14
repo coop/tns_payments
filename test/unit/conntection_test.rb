@@ -124,7 +124,7 @@ class TNSPayments::ConnectionTest < MiniTest::Unit::TestCase
 private
 
   def stub_availability_request
-    stub_request(:get, "https://secure.ap.tnspayments.com/api/rest/version/4/information").
+    stub_request(:get, "https://secure.ap.tnspayments.com/api/rest/version/32/information").
       with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'Application/json;charset=UTF-8'})
   end
 
@@ -189,7 +189,7 @@ private
   end
 
   def stub_session_token_request
-    stub_request(:post, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/session/).
+    stub_request(:post, /https:\/\/merchant.MERCHANT:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/32\/merchant\/#{@gateway.merchant_id}\/session/).
       with :headers => {
              'Accept' => '*/*',
              'Accept-Encoding' => 'gzip, deflate',
@@ -200,7 +200,7 @@ private
 
   def stub_session_token_purchase_request transaction, token
     transaction = Transaction.new transaction
-    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
+    stub_request(:put, /https:\/\/merchant.MERCHANT:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/32\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'PAY',
              'order'        => {'reference' => transaction.reference.to_s},
@@ -217,7 +217,7 @@ private
 
   def stub_credit_card_token_purchase_request transaction, token
     transaction = Transaction.new transaction
-    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
+    stub_request(:put, /https:\/\/merchant.MERCHANT:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/32\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'PAY',
              'order'        => {'reference' => transaction.reference.to_s},
@@ -234,7 +234,7 @@ private
 
   def stub_refund_request transaction
     transaction = Transaction.new transaction
-    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
+    stub_request(:put, /https:\/\/merchant.MERCHANT:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/32\/merchant\/#{@gateway.merchant_id}\/order\/#{transaction.order_id}\/transaction\/#{transaction.transaction_id}/).
       with :body => JSON.generate({
              'apiOperation' => 'REFUND',
              'transaction'  => {'amount' => transaction.amount.to_s, 'currency' => transaction.currency, 'reference' => transaction.transaction_id.to_s}
@@ -248,7 +248,7 @@ private
   end
 
   def stub_create_credit_card_token_request token
-    stub_request(:post, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/token/).
+    stub_request(:post, /https:\/\/merchant.MERCHANT:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/32\/merchant\/#{@gateway.merchant_id}\/token/).
       with :body => JSON.generate({
              'cardDetails' => {'session' => token}
            }),
@@ -259,7 +259,7 @@ private
   end
 
   def stub_delete_credit_card_token_request token
-    stub_request(:delete, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/token\/#{token}/).
+    stub_request(:delete, /https:\/\/merchant.MERCHANT:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/32\/merchant\/#{@gateway.merchant_id}\/token\/#{token}/).
       with :body    => {},
            :headers => {
              'Accept'       => '*/*',
@@ -268,7 +268,7 @@ private
   end
 
   def stub_successful_check_enrollment_request transaction, token, postback_url
-    stub_request(:put, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/3DSecureId\/#{transaction.three_domain_id}/).
+    stub_request(:put, /https:\/\/merchant.MERCHANT:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/32\/merchant\/#{@gateway.merchant_id}\/3DSecureId\/#{transaction.three_domain_id}/).
       with(:body => JSON.generate({
            '3DSecure'     => {'authenticationRedirect' => {'pageGenerationMode' => 'CUSTOMIZED', 'responseUrl' => postback_url}},
            'apiOperation' => 'CHECK_3DS_ENROLLMENT',
@@ -281,11 +281,11 @@ private
            'Content-Length'  => '237',
            'Content-Type'    => 'Application/json;charset=UTF-8'
          }).
-      to_return :status => 200, :headers => {}, :body => "{\"3DSecure\":{\"authenticationRedirect\":{\"customized\":{\"acsUrl\":\"https://secure.ap.tnspayments.com:443/acs/MastercardACS/4272b87b-2cc0-4232-a96e-e678ecbe7455\",\"paReq\":\"eAFVkd1ugkAQhe9NfAfCfV1ghVIzrNFq1aY/pNqY9I7AKCQCukILfZ2+SZ+sswq1vePMcGbPfAPDKt1p7yiPSZ55utkzdA2zMI+SbOvpr6u7K1cfim4HVrFEnCwxLCUKeMTjMdiilkSezrlpmJbh6gL80QseBDTjBE3rWcBaSS4ZxkFWCAjCw3jxJGyLG44NrJGQolxMhGnxvu1cu8DOGrIgRTGlMXUU1NocZa49FBGwUx3CvMwKWQvXcoC1Akq5E3FR7AeMITnJGJOvF+YpMNUDdknjlyrXkfaqkkg8R9HmrZotNx8pn8b17HNdGfexX64nfQ+Y+gOioEBhqa25aWsWH3BnYFPeUx2CVCUSs7GvfX8RA4MWPJdgr14anYWpGn8LQGwlwW9XaRVgtc8zpJEE8/cb2CX27VwhDQuCZ7f0bige7xOSpqGmJITJ5AYRbwQwZWXN3QjJ6axU+XfubucHAPGz0w==\"}},\"summaryStatus\":\"CARD_ENROLLED\",\"xid\":\"OddfZxGSfwm3EhyGzWx0JhPuWD4=\"},\"3DSecureId\":\"#{transaction.three_domain_id}\",\"merchant\":\"#{@gateway.merchant_id}\",\"response\":{\"3DSecure\":{\"gatewayCode\":\"CARD_ENROLLED\"}}}"
+      to_return :status => 200, :headers => {}, :body => "{\"3DSecure\":{\"authenticationRedirect\":{\"customized\":{\"acsUrl\":\"https://secure.ap.tnspayments.com:443/acs/MastercardACS/32272b87b-2cc0-4232-a96e-e678ecbe7455\",\"paReq\":\"eAFVkd1ugkAQhe9NfAfCfV1ghVIzrNFq1aY/pNqY9I7AKCQCukILfZ2+SZ+sswq1vePMcGbPfAPDKt1p7yiPSZ55utkzdA2zMI+SbOvpr6u7K1cfim4HVrFEnCwxLCUKeMTjMdiilkSezrlpmJbh6gL80QseBDTjBE3rWcBaSS4ZxkFWCAjCw3jxJGyLG44NrJGQolxMhGnxvu1cu8DOGrIgRTGlMXUU1NocZa49FBGwUx3CvMwKWQvXcoC1Akq5E3FR7AeMITnJGJOvF+YpMNUDdknjlyrXkfaqkkg8R9HmrZotNx8pn8b17HNdGfexX64nfQ+Y+gOioEBhqa25aWsWH3BnYFPeUx2CVCUSs7GvfX8RA4MWPJdgr14anYWpGn8LQGwlwW9XaRVgtc8zpJEE8/cb2CX27VwhDQuCZ7f0bige7xOSpqGmJITJ5AYRbwQwZWXN3QjJ6axU+XfubucHAPGz0w==\"}},\"summaryStatus\":\"CARD_ENROLLED\",\"xid\":\"OddfZxGSfwm3EhyGzWx0JhPuWD4=\"},\"3DSecureId\":\"#{transaction.three_domain_id}\",\"merchant\":\"#{@gateway.merchant_id}\",\"response\":{\"3DSecure\":{\"gatewayCode\":\"CARD_ENROLLED\"}}}"
   end
 
   def stub_successful_process_acs_result_request three_domain_id, pa_res
-    stub_request(:post, /https:\/\/:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/4\/merchant\/#{@gateway.merchant_id}\/3DSecureId\/#{three_domain_id}/).
+    stub_request(:post, /https:\/\/merchant.MERCHANT:#{@gateway.api_key}@secure\.ap\.tnspayments\.com\/api\/rest\/version\/32\/merchant\/#{@gateway.merchant_id}\/3DSecureId\/#{three_domain_id}/).
       with(:body => JSON.generate({
            '3DSecure'     => {'paRes' => pa_res},
            'apiOperation' => 'PROCESS_ACS_RESULT'

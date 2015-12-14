@@ -54,11 +54,13 @@ module TNSPayments
     end
 
     def encode_credentials
-      'Basic ' + Base64.encode64(":#{connection.api_key}")
+      credentials = ["merchant.#{connection.merchant_id}:#{connection.api_key}"].pack("m*").delete("\n")
+
+      "Basic #{credentials}"
     end
 
     def url
-      "#{connection.host}/api/rest/version/4#{path}"
+      "#{connection.host}/api/rest/version/32#{path}"
     end
   end
 end
