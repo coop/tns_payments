@@ -1,0 +1,114 @@
+--- 
+recorded_with: VCR 2.9.3
+http_interactions: 
+- request: 
+    method: post
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/session
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Length: 
+      - "149"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:14 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a06dde739255b51ec92c260efb205ccd88a9961f27908e9f6e8ac7fbd285ec27f8; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+    body: 
+      string: "{\"merchant\":\"<TNS_MERCHANT_ID>\",\"result\":\"SUCCESS\",\"session\":{\"id\":\"SESSION0002019574105M4098673I82\",\"updateStatus\":\"NO_UPDATE\",\"version\":\"343a7dec01\"}}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:15 GMT
+- request: 
+    method: put
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/session/SESSION0002019574105M4098673I82
+    body: 
+      string: "{\"sourceOfFunds\":{\"type\":\"CARD\",\"provided\":{\"card\":{\"number\":\"4005550000000001\",\"expiry\":{\"month\":\"05\",\"year\":\"17\"},\"securityCode\":\"123\"}}}}"
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Length: 
+      - "140"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "337"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:14 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a071a665b9d48249c765377f6f047b0259310dfdd45ee0e4b85a31907c7635ecee; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+    body: 
+      string: "{\"merchant\":\"<TNS_MERCHANT_ID>\",\"session\":{\"id\":\"SESSION0002019574105M4098673I82\",\"updateStatus\":\"SUCCESS\",\"version\":\"dff8884502\"},\"sourceOfFunds\":{\"provided\":{\"card\":{\"brand\":\"VISA\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"fundingMethod\":\"CREDIT\",\"number\":\"400555xxxxxx0001\",\"scheme\":\"VISA\",\"securityCode\":\"xxx\"}},\"type\":\"CARD\"},\"version\":\"32\"}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:15 GMT
+- request: 
+    method: put
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/3DSecureId/65ccba0dc0797b93da4d0d0544d00cfcb8d54c4d
+    body: 
+      string: "{\"apiOperation\":\"CHECK_3DS_ENROLLMENT\",\"3DSecure\":{\"authenticationRedirect\":{\"pageGenerationMode\":\"CUSTOMIZED\",\"responseUrl\":\"http://google.com\"}},\"session\":{\"id\":\"SESSION0002019574105M4098673I82\"},\"order\":{\"amount\":\"100.00\",\"currency\":\"EUR\"}}"
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Length: 
+      - "243"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 400
+      message: Bad Request
+    headers: 
+      Content-Length: 
+      - "173"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:14 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a03296ec5867ae2026006a379b6119aa45e009c45c94d2794ff069cf0c583a0caf; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+      X-Cnection: 
+      - close
+    body: 
+      string: "{\"error\":{\"cause\":\"INVALID_REQUEST\",\"explanation\":\"Merchant : Everyday Hero Pty Ltd is not configured to support 3D Secure operations for this card type.\"},\"result\":\"ERROR\"}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:15 GMT

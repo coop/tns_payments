@@ -5,7 +5,7 @@ module TNSPayments
   class Request
     attr_accessor :connection, :method, :path, :payload
 
-    def initialize connection, method, path, payload = {}
+    def initialize connection, method, path, payload = nil
       self.connection = connection
       self.method     = method
       self.path       = path
@@ -19,7 +19,7 @@ module TNSPayments
       headers = {}
       headers[:accept]        = '*/*'
       headers[:content_type]  = 'Application/json;charset=UTF-8'
-      headers[:Authorization] = encode_credentials if authorization
+      headers[:Authorization] = encode_credentials
       headers
     end
 
@@ -30,11 +30,11 @@ module TNSPayments
       args = {
         :method       => method,
         :url          => url,
-        :payload      => payload.to_json,
         :headers      => headers,
         :timeout      => 120,
         :open_timeout => 30
       }
+      args[:payload] = payload.to_json if payload
 
       Response.new RestClient::Request.execute(args)
     rescue RestClient::Exception => e
@@ -48,10 +48,6 @@ module TNSPayments
     end
 
   private
-
-    def authorization
-      payload.fetch(:authorization) { true }
-    end
 
     def encode_credentials
       credentials = ["merchant.#{connection.merchant_id}:#{connection.api_key}"].pack("m*").delete("\n")

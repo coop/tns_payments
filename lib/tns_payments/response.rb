@@ -1,3 +1,5 @@
+require 'delegate'
+
 module TNSPayments
   class Response
     attr_reader :raw_response
@@ -17,13 +19,7 @@ module TNSPayments
     #
     # Returns a string.
     def result
-      if response.has_key?('status')
-        response['status'] == 'OPERATING' ? 'SUCCESS' : 'ERROR'
-      elsif response.has_key?('3DSecure')
-        'SUCCESS'
-      else
-        response['result']
-      end
+      response.fetch('result') { 'UNKNOWN' }
     end
 
     # Public: Check if the request was successful.
@@ -42,6 +38,30 @@ module TNSPayments
       else
         ErrorResponse.new(raw_response).explanation
       end
+    end
+  end
+
+  class UpdateSessionResponse < SimpleDelegator
+    def success?
+      update_status == 'SUCCESS'
+    end
+
+    private
+
+    def update_status
+      response['session']['updateStatus']
+    end
+  end
+
+  class AvailableResponse < SimpleDelegator
+    def success?
+      response['status'] == 'OPERATING'
+    end
+  end
+
+  class ThreeDomainSecureResponse < SimpleDelegator
+    def success?
+      response.has_key?("3DSecure")
     end
   end
 end

@@ -1,0 +1,149 @@
+--- 
+recorded_with: VCR 2.9.3
+http_interactions: 
+- request: 
+    method: post
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/session
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Length: 
+      - "149"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:02 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a07fe37703f6de922bda937330e729affb9f9f203b15264532176b06b28dd8e829; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+    body: 
+      string: "{\"merchant\":\"<TNS_MERCHANT_ID>\",\"result\":\"SUCCESS\",\"session\":{\"id\":\"SESSION0002556964795F4171120H28\",\"updateStatus\":\"NO_UPDATE\",\"version\":\"2e1b115e01\"}}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:03 GMT
+- request: 
+    method: put
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/session/SESSION0002556964795F4171120H28
+    body: 
+      string: "{\"sourceOfFunds\":{\"type\":\"CARD\",\"provided\":{\"card\":{\"number\":\"4005550000000001\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"securityCode\":\"123\"}}}}"
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Length: 
+      - "139"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "337"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:02 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a00686829b21781a870b70579cfc29c416f7968de7dd75764673102468bb4a1385; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+    body: 
+      string: "{\"merchant\":\"<TNS_MERCHANT_ID>\",\"session\":{\"id\":\"SESSION0002556964795F4171120H28\",\"updateStatus\":\"SUCCESS\",\"version\":\"22628e1e02\"},\"sourceOfFunds\":{\"provided\":{\"card\":{\"brand\":\"VISA\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"fundingMethod\":\"CREDIT\",\"number\":\"400555xxxxxx0001\",\"scheme\":\"VISA\",\"securityCode\":\"xxx\"}},\"type\":\"CARD\"},\"version\":\"32\"}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:03 GMT
+- request: 
+    method: put
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/order/10000001604/transaction/PAY
+    body: 
+      string: "{\"apiOperation\":\"PAY\",\"order\":{\"amount\":\"100.00\",\"currency\":\"EUR\",\"reference\":\"PAY\"},\"transaction\":{\"reference\":\"PAY\"},\"sourceOfFunds\":{\"type\":\"CARD\"},\"session\":{\"id\":\"SESSION0002556964795F4171120H28\"}}"
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Length: 
+      - "202"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Length: 
+      - "1610"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:03 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a04a70845e5f3c7ec4eb8f5675bcd1bb0086e5f227d3c28053c47d7ba2e5748fe1; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+    body: 
+      string: "{\"gatewayEntryPoint\":\"WEB_SERVICES_API\",\"merchant\":\"<TNS_MERCHANT_ID>\",\"order\":{\"amount\":100.00,\"creationTime\":\"2016-01-11T23:51:03.179Z\",\"currency\":\"EUR\",\"id\":\"10000001604\",\"reference\":\"PAY\",\"status\":\"CAPTURED\",\"totalAuthorizedAmount\":100.00,\"totalCapturedAmount\":100.00,\"totalRefundedAmount\":0.00},\"response\":{\"acquirerCode\":\"00\",\"acquirerMessage\":\"Approved\",\"cardSecurityCode\":{\"acquirerCode\":\"1\",\"gatewayCode\":\"NOT_PROCESSED\"},\"gatewayCode\":\"APPROVED\"},\"result\":\"SUCCESS\",\"risk\":{\"response\":{\"gatewayCode\":\"ACCEPTED\",\"review\":{\"decision\":\"NOT_REQUIRED\"},\"rule\":[{\"data\":\"400555\",\"name\":\"MERCHANT_BIN_RANGE\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"data\":\"P\",\"name\":\"MERCHANT_CSC\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"name\":\"SUSPECT_CARD_LIST\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"name\":\"TRUSTED_CARD_LIST\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"data\":\"400555\",\"name\":\"MSO_BIN_RANGE\",\"recommendation\":\"NO_ACTION\",\"type\":\"MSO_RULE\"},{\"data\":\"P\",\"name\":\"MSO_CSC\",\"recommendation\":\"NO_ACTION\",\"type\":\"MSO_RULE\"}]}},\"sourceOfFunds\":{\"provided\":{\"card\":{\"brand\":\"VISA\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"fundingMethod\":\"CREDIT\",\"issuer\":\"JPMORGAN CHASE BANK, N.A.\",\"number\":\"400555xxxxxx0001\",\"scheme\":\"VISA\"}},\"type\":\"CARD\"},\"timeOfRecord\":\"2016-01-11T23:51:03.179Z\",\"transaction\":{\"acquirer\":{\"batch\":1,\"id\":\"AIB\",\"merchantId\":\"011855511\"},\"amount\":100.00,\"authorizationCode\":\"029326\",\"currency\":\"EUR\",\"frequency\":\"SINGLE\",\"id\":\"PAY\",\"receipt\":\"AAAAC5BP7X\",\"reference\":\"PAY\",\"source\":\"MOTO\",\"terminal\":\"31208585\",\"type\":\"PAYMENT\"},\"version\":\"32\"}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:04 GMT
+- request: 
+    method: put
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/order/10000001604/transaction/REFUND
+    body: 
+      string: "{\"apiOperation\":\"REFUND\",\"transaction\":{\"amount\":\"100.00\",\"currency\":\"EUR\",\"reference\":\"PAY\"}}"
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Length: 
+      - "94"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Length: 
+      - "1614"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:04 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a09fbae0ec23efad7fa098ce369181d0282365a1bff74b3d3a6552a868dd4b19e3; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+    body: 
+      string: "{\"gatewayEntryPoint\":\"WEB_SERVICES_API\",\"merchant\":\"<TNS_MERCHANT_ID>\",\"order\":{\"amount\":100.00,\"creationTime\":\"2016-01-11T23:51:03.179Z\",\"currency\":\"EUR\",\"id\":\"10000001604\",\"reference\":\"PAY\",\"status\":\"REFUNDED\",\"totalAuthorizedAmount\":100.00,\"totalCapturedAmount\":100.00,\"totalRefundedAmount\":100.00},\"response\":{\"acquirerCode\":\"00\",\"acquirerMessage\":\"Approved\",\"cardSecurityCode\":{\"acquirerCode\":\"1\",\"gatewayCode\":\"NOT_PROCESSED\"},\"gatewayCode\":\"APPROVED\"},\"result\":\"SUCCESS\",\"risk\":{\"response\":{\"gatewayCode\":\"ACCEPTED\",\"review\":{\"decision\":\"NOT_REQUIRED\"},\"rule\":[{\"data\":\"400555\",\"name\":\"MERCHANT_BIN_RANGE\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"data\":\"P\",\"name\":\"MERCHANT_CSC\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"name\":\"SUSPECT_CARD_LIST\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"name\":\"TRUSTED_CARD_LIST\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"data\":\"400555\",\"name\":\"MSO_BIN_RANGE\",\"recommendation\":\"NO_ACTION\",\"type\":\"MSO_RULE\"},{\"data\":\"P\",\"name\":\"MSO_CSC\",\"recommendation\":\"NO_ACTION\",\"type\":\"MSO_RULE\"}]}},\"sourceOfFunds\":{\"provided\":{\"card\":{\"brand\":\"VISA\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"fundingMethod\":\"CREDIT\",\"issuer\":\"JPMORGAN CHASE BANK, N.A.\",\"number\":\"400555xxxxxx0001\",\"scheme\":\"VISA\"}},\"type\":\"CARD\"},\"timeOfRecord\":\"2016-01-11T23:51:03.902Z\",\"transaction\":{\"acquirer\":{\"batch\":1,\"id\":\"AIB\",\"merchantId\":\"011855511\"},\"amount\":100.00,\"authorizationCode\":\"029327\",\"currency\":\"EUR\",\"frequency\":\"SINGLE\",\"id\":\"REFUND\",\"receipt\":\"AAAAC5BS26\",\"reference\":\"PAY\",\"source\":\"MOTO\",\"terminal\":\"31208585\",\"type\":\"REFUND\"},\"version\":\"32\"}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:05 GMT
