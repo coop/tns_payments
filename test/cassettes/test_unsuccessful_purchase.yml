@@ -1,0 +1,42 @@
+--- 
+recorded_with: VCR 2.9.3
+http_interactions: 
+- request: 
+    method: put
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/order/10000001610/transaction/PAY
+    body: 
+      string: "{\"apiOperation\":\"PAY\",\"order\":{\"amount\":\"100.00\",\"currency\":\"EUR\",\"reference\":\"PAY\"},\"transaction\":{\"reference\":\"PAY\"},\"sourceOfFunds\":{\"type\":\"CARD\"},\"session\":{\"id\":\"LOLSESSIONTOKEN\"}}"
+    headers: 
+      Content-Length: 
+      - "186"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - "*/*"
+  response: 
+    status: 
+      code: 400
+      message: Bad Request
+    headers: 
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a024f8ba77781bc8b67db04663fe6926efd8a518008d844aa76324e612d9073f05; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+      Content-Length: 
+      - "105"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Pragma: 
+      - no-cache
+      X-Cnection: 
+      - close
+      Expires: 
+      - "0"
+      Date: 
+      - Mon, 11 Jan 2016 23:56:11 GMT
+    body: 
+      string: "{\"error\":{\"cause\":\"INVALID_REQUEST\",\"explanation\":\"Form Session not found or expired.\"},\"result\":\"ERROR\"}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:56:12 GMT

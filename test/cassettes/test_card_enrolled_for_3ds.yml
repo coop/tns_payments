@@ -1,0 +1,112 @@
+--- 
+recorded_with: VCR 2.9.3
+http_interactions: 
+- request: 
+    method: post
+    uri: https://merchant.<TNS_3DS_MERCHANT_ID>:<TNS_3DS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_3DS_MERCHANT_ID>/session
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Length: 
+      - "151"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:11 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a029b5da654c68dc170cba39ea1d91c850daa6f3b9e6fbda7ceea955638c147083; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+    body: 
+      string: "{\"merchant\":\"<TNS_3DS_MERCHANT_ID>\",\"result\":\"SUCCESS\",\"session\":{\"id\":\"SESSION0002652865288J0824240H65\",\"updateStatus\":\"NO_UPDATE\",\"version\":\"6fdc04df01\"}}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:12 GMT
+- request: 
+    method: put
+    uri: https://merchant.<TNS_3DS_MERCHANT_ID>:<TNS_3DS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_3DS_MERCHANT_ID>/session/SESSION0002652865288J0824240H65
+    body: 
+      string: "{\"sourceOfFunds\":{\"type\":\"CARD\",\"provided\":{\"card\":{\"number\":\"4508750015741019\",\"expiry\":{\"month\":\"05\",\"year\":\"17\"},\"securityCode\":\"123\"}}}}"
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Length: 
+      - "140"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "338"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:12 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a02b4240fa2d72a2c64687ed3be60fa49b0d89bafd246da63efe3077ab9d703c66; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+    body: 
+      string: "{\"merchant\":\"<TNS_3DS_MERCHANT_ID>\",\"session\":{\"id\":\"SESSION0002652865288J0824240H65\",\"updateStatus\":\"SUCCESS\",\"version\":\"739704e802\"},\"sourceOfFunds\":{\"provided\":{\"card\":{\"brand\":\"VISA\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"fundingMethod\":\"DEBIT\",\"number\":\"450875xxxxxx1019\",\"scheme\":\"VISA\",\"securityCode\":\"xxx\"}},\"type\":\"CARD\"},\"version\":\"32\"}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:13 GMT
+- request: 
+    method: put
+    uri: https://merchant.<TNS_3DS_MERCHANT_ID>:<TNS_3DS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_3DS_MERCHANT_ID>/3DSecureId/b08fff87998d20605f134b632cb8fa3398008116
+    body: 
+      string: "{\"apiOperation\":\"CHECK_3DS_ENROLLMENT\",\"3DSecure\":{\"authenticationRedirect\":{\"pageGenerationMode\":\"CUSTOMIZED\",\"responseUrl\":\"http://google.com\"}},\"session\":{\"id\":\"SESSION0002652865288J0824240H65\"},\"order\":{\"amount\":\"100.00\",\"currency\":\"GBP\"}}"
+    headers: 
+      Accept: 
+      - "*/*"
+      Content-Length: 
+      - "243"
+      Content-Type: 
+      - Application/json;charset=UTF-8
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Length: 
+      - "868"
+      Content-Type: 
+      - application/json;charset=UTF-8
+      Date: 
+      - Mon, 11 Jan 2016 23:51:12 GMT
+      Pragma: 
+      - no-cache
+      Expires: 
+      - "0"
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a09a2ee8278050933bb52a00b5836463b8cfa1be4533dd9ab1067ef26f3dff9b0e; Path=/
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+    body: 
+      string: "{\"3DSecure\":{\"authenticationRedirect\":{\"customized\":{\"acsUrl\":\"https://secure.ap.tnspayments.com:443/acs/VisaACS/34744c32-e862-4051-91ba-b73194062a69\",\"paReq\":\"eAFVUdtugkAUfDfxHwivppzdFYqY4xovbbW3mGrjM4WNkAjoig1+T/+kX9azoLXlaWeWmT0zB4dVtrU+lT6kRT6wucNsS+VREaf5ZmC/r+5vevZQtlu4SrRS06WKjlpJfFGHQ7hRVhqThns+933PtSUuRm9qL/HsJ8nOEQgXSDIdJWFeSgyj/Xj+Kl0RMOEinCFmSs+nsivcIBA+Z82H0NCYh5mSd+R2isOTNVO6sJ7LGKHmMSqOealPsiduES4Aj3ork7Lc9QEUKUmYkM6JigzB3CFch1oczXgHylelsfSS9Qesik4+fYR9kE6h4pN1J1s+bYsBgvkD47BUUjB+yzjnluj2Pd7nFLjmMczMRPJhvLC+vyiMwxglbUjcmbdGDaiDIvylkHrWtIhLnAtCVe2KXJEtPfN7RriOPpmZdqOSenQ91vM9xmhBLmc8MD3XF8Ylpaq4z7zaxgAEI4XzCqmWesXE/Ft9u/UDKJS0+g==\"}},\"summaryStatus\":\"CARD_ENROLLED\",\"xid\":\"5hWb/To+nDJ/q9iD/x1CW+mSKlo=\"},\"3DSecureId\":\"b08fff87998d20605f134b632cb8fa3398008116\",\"merchant\":\"<TNS_3DS_MERCHANT_ID>\",\"response\":{\"3DSecure\":{\"gatewayCode\":\"CARD_ENROLLED\"}}}"
+    http_version: 
+  recorded_at: Mon, 11 Jan 2016 23:51:13 GMT

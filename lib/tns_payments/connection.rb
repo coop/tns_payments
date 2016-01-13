@@ -1,4 +1,5 @@
 require 'base64'
+require 'active_support/ordered_hash'
 
 module TNSPayments
   class Connection
@@ -11,7 +12,7 @@ module TNSPayments
     #
     # Returns a boolean.
     def available?
-      request(:get, '/information', :authorization => false).success?
+      AvailableResponse.new(request(:get, '/information')).success?
     end
 
     def initialize options
@@ -34,16 +35,17 @@ module TNSPayments
       transaction    = Transaction.new transaction
       order_id       = transaction.order_id
       transaction_id = transaction.transaction_id
-      params         = {
-        'apiOperation' => 'PAY',
-        'cardDetails'  => card_details(token),
-        'order'        => {'reference' => transaction.reference},
-        'transaction'  => {
-          'amount'    => transaction.amount.to_s,
-          'currency'  => transaction.currency,
-          'reference' => transaction.reference.to_s
-        }
-      }
+      order_params = ActiveSupport::OrderedHash.new
+      order_params['amount'] = transaction.amount.to_s
+      order_params['currency'] = transaction.currency
+      order_params['reference'] = transaction.reference
+      transaction_params = ActiveSupport::OrderedHash.new
+      transaction_params['reference'] = transaction.reference.to_s
+      params = ActiveSupport::OrderedHash.new
+      params['apiOperation'] = 'PAY'
+      params['order'] = order_params
+      params['transaction'] = transaction_params
+      params.merge!(source_of_funds(token))
 
       request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
     end
@@ -52,17 +54,16 @@ module TNSPayments
     #
     # Returns a Response object.
     def refund transaction
-      transaction    = Transaction.new transaction
-      order_id       = transaction.order_id.to_i
+      transaction = Transaction.new transaction
+      order_id = transaction.order_id.to_i
       transaction_id = transaction.transaction_id
-      params         = {
-        'apiOperation' => 'REFUND',
-        'transaction'  => {
-          'amount'    => transaction.amount.to_s,
-          'currency'  => transaction.currency,
-          'reference' => transaction.reference.to_s
-        }
-      }
+      transaction_params = ActiveSupport::OrderedHash.new
+      transaction_params['amount'] = transaction.amount.to_s
+      transaction_params['currency'] = transaction.currency
+      transaction_params['reference'] = transaction.reference.to_s
+      params = ActiveSupport::OrderedHash.new
+      params['apiOperation'] = 'REFUND'
+      params['transaction'] = transaction_params
 
       request :put, "/merchant/#{merchant_id}/order/#{order_id}/transaction/#{transaction_id}", params
     end
@@ -71,9 +72,13 @@ module TNSPayments
     #
     # Returns a Response object.
     def create_credit_card_token token
-      params = {
-        'cardDetails' => card_details(token)
-      }
+      source_of_funds_params = ActiveSupport::OrderedHash.new
+      source_of_funds_params['type'] = 'CARD'
+      session_params = ActiveSupport::OrderedHash.new
+      session_params['id'] = token
+      params = ActiveSupport::OrderedHash.new
+      params['session'] = session_params
+      params['sourceOfFunds'] = source_of_funds_params
 
       request :post, "/merchant/#{merchant_id}/token", params
     end
@@ -92,35 +97,44 @@ module TNSPayments
     # Returns a Response object.
     def session_token
       @session_token ||= begin
-        response = request :post, "/merchant/#{merchant_id}/session"
-        if response.success?
-          response.response.fetch('session')
+        result = request :post, "/merchant/#{merchant_id}/session"
+        if result.success?
+          result.response['session']['id']
         else
-          raise SessionTokenException.new, response.explanation
+          raise SessionTokenException.new, result.explanation
         end
       end
+    end
+
+    # Public: Request to update a session token with card data.
+    #
+    # Returns a response object.
+    def update_session_with_card(token, card)
+      source_of_funds_params = ActiveSupport::OrderedHash.new
+      source_of_funds_params['type'] = 'CARD'
+      source_of_funds_params['provided'] = {'card' => card}
+      params = {'sourceOfFunds' => source_of_funds_params}
+
+      UpdateSessionResponse.new(request(:put, "/merchant/#{merchant_id}/session/#{token}", params))
     end
 
     # Public: Request to check a cardholder's enrollment in the 3DSecure scheme.
     #
     # Returns a Response object.
     def check_enrollment transaction, token, postback_url
-      params = {
-        '3DSecure'     => {
-          'authenticationRedirect' => {
-            'pageGenerationMode'   => 'CUSTOMIZED',
-            'responseUrl'          => postback_url
-          }
-        },
-        'apiOperation' => 'CHECK_3DS_ENROLLMENT',
-        'cardDetails'  => card_details(token),
-        'transaction'  => {
-          'amount'   => transaction.amount.to_s,
-          'currency' => transaction.currency
-        }
-      }
+      redirect_params = ActiveSupport::OrderedHash.new
+      redirect_params['pageGenerationMode'] = 'CUSTOMIZED'
+      redirect_params['responseUrl'] = postback_url
+      order_params = ActiveSupport::OrderedHash.new
+      order_params['amount'] = transaction.amount.to_s
+      order_params['currency'] = transaction.currency
+      params = ActiveSupport::OrderedHash.new
+      params['apiOperation'] = 'CHECK_3DS_ENROLLMENT'
+      params['3DSecure'] = {'authenticationRedirect' => redirect_params}
+      params['session'] = {'id' => token}
+      params['order'] = order_params
 
-      request :put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_domain_id}", params
+      ThreeDomainSecureResponse.new(request(:put, "/merchant/#{merchant_id}/3DSecureId/#{transaction.three_domain_id}", params))
     end
 
     # Public: Interprets the authentication response returned from the card
@@ -134,21 +148,29 @@ module TNSPayments
         'apiOperation' => 'PROCESS_ACS_RESULT'
       }
 
-      request :post, "/merchant/#{merchant_id}/3DSecureId/#{three_domain_id}", params
+      ThreeDomainSecureResponse.new(request(:post, "/merchant/#{merchant_id}/3DSecureId/#{three_domain_id}", params))
     end
 
   private
 
-    def card_details token
-      {token_key(token) => token}
+    def source_of_funds(token)
+      params = ActiveSupport::OrderedHash.new
+      funds = ActiveSupport::OrderedHash.new
+      funds['type'] = 'CARD'
+
+      if token =~ CREDIT_CARD_TOKEN_FORMAT
+        funds['token'] = token
+        params['sourceOfFunds'] = funds
+      else
+        params['sourceOfFunds'] = funds
+        params['session'] = {'id' => token}
+      end
+
+      params
     end
 
-    def token_key token
-      token =~ CREDIT_CARD_TOKEN_FORMAT ? 'cardToken' : 'session'
-    end
-
-    def request method, path, options = {}
-      Request.new(self, method, path, options).perform
+    def request(*args)
+      Request.new(self, *args).perform
     end
   end
 end
