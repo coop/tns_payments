@@ -56,7 +56,7 @@ module TNSPayments
     end
 
     def url
-      "#{connection.host}/api/rest/version/32#{path}"
+      "#{connection.host}/api/rest/version/30#{path}"
     end
   end
 end

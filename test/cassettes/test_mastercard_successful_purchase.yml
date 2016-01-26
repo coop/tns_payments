@@ -3,110 +3,110 @@ recorded_with: VCR 2.9.3
 http_interactions: 
 - request: 
     method: post
-    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/session
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/30/merchant/<TNS_MERCHANT_ID>/session
     body: 
       string: ""
     headers: 
       Accept: 
       - "*/*"
-      Content-Type: 
-      - Application/json;charset=UTF-8
       Accept-Encoding: 
       - gzip, deflate
+      Content-Type: 
+      - Application/json;charset=UTF-8
   response: 
     status: 
       code: 201
       message: Created
     headers: 
+      Expires: 
+      - "0"
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+      Date: 
+      - Tue, 26 Jan 2016 06:50:35 GMT
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a059177d61fc36dd659cc541f9d789bf0fce86f77d98a5c3cf1b780bc35ec3c85f; Path=/
+      Pragma: 
+      - no-cache
       Content-Length: 
       - "149"
       Content-Type: 
       - application/json;charset=UTF-8
-      Date: 
-      - Mon, 11 Jan 2016 23:51:00 GMT
-      Pragma: 
-      - no-cache
-      Expires: 
-      - "0"
-      Set-Cookie: 
-      - TS018aacab=01c9ad79a0e43085f5769c4251d68dd2ac70e6ea0147304df176ea6586ad3aed2b1818724b; Path=/
-      Cache-Control: 
-      - no-cache, no-store, must-revalidate
     body: 
-      string: "{\"merchant\":\"<TNS_MERCHANT_ID>\",\"result\":\"SUCCESS\",\"session\":{\"id\":\"SESSION0002851313900E8334787M11\",\"updateStatus\":\"NO_UPDATE\",\"version\":\"2a93074e01\"}}"
+      string: "{\"merchant\":\"<TNS_MERCHANT_ID>\",\"result\":\"SUCCESS\",\"session\":{\"id\":\"SESSION0002325439400H49680314H4\",\"updateStatus\":\"NO_UPDATE\",\"version\":\"83a00ac401\"}}"
     http_version: 
-  recorded_at: Mon, 11 Jan 2016 23:51:01 GMT
+  recorded_at: Tue, 26 Jan 2016 06:50:35 GMT
 - request: 
     method: put
-    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/session/SESSION0002851313900E8334787M11
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/30/merchant/<TNS_MERCHANT_ID>/session/SESSION0002325439400H49680314H4
     body: 
       string: "{\"sourceOfFunds\":{\"type\":\"CARD\",\"provided\":{\"card\":{\"number\":\"5123456789012346\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"securityCode\":\"123\"}}}}"
     headers: 
       Accept: 
       - "*/*"
+      Accept-Encoding: 
+      - gzip, deflate
       Content-Length: 
       - "139"
       Content-Type: 
       - Application/json;charset=UTF-8
-      Accept-Encoding: 
-      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
+      Expires: 
+      - "0"
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+      Date: 
+      - Tue, 26 Jan 2016 06:50:35 GMT
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a0eb897a12019088fa080a3a916f8d8f9bca1c5b234bf0de450d3e693aaf7b585c; Path=/
+      Pragma: 
+      - no-cache
       Content-Length: 
       - "349"
       Content-Type: 
       - application/json;charset=UTF-8
-      Date: 
-      - Mon, 11 Jan 2016 23:51:01 GMT
-      Pragma: 
-      - no-cache
-      Expires: 
-      - "0"
-      Set-Cookie: 
-      - TS018aacab=01c9ad79a0c2dc1c1c298eee2506a043f7e808dcc4e9490242d1995a5507c7a862318a5c3c; Path=/
-      Cache-Control: 
-      - no-cache, no-store, must-revalidate
     body: 
-      string: "{\"merchant\":\"<TNS_MERCHANT_ID>\",\"session\":{\"id\":\"SESSION0002851313900E8334787M11\",\"updateStatus\":\"SUCCESS\",\"version\":\"04bb918402\"},\"sourceOfFunds\":{\"provided\":{\"card\":{\"brand\":\"MASTERCARD\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"fundingMethod\":\"CREDIT\",\"number\":\"512345xxxxxx2346\",\"scheme\":\"MASTERCARD\",\"securityCode\":\"xxx\"}},\"type\":\"CARD\"},\"version\":\"32\"}"
+      string: "{\"merchant\":\"<TNS_MERCHANT_ID>\",\"session\":{\"id\":\"SESSION0002325439400H49680314H4\",\"updateStatus\":\"SUCCESS\",\"version\":\"78f71bbe02\"},\"sourceOfFunds\":{\"provided\":{\"card\":{\"brand\":\"MASTERCARD\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"fundingMethod\":\"CREDIT\",\"number\":\"512345xxxxxx2346\",\"scheme\":\"MASTERCARD\",\"securityCode\":\"xxx\"}},\"type\":\"CARD\"},\"version\":\"30\"}"
     http_version: 
-  recorded_at: Mon, 11 Jan 2016 23:51:02 GMT
+  recorded_at: Tue, 26 Jan 2016 06:50:35 GMT
 - request: 
     method: put
-    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/merchant/<TNS_MERCHANT_ID>/order/10000001601/transaction/PAY
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/30/merchant/<TNS_MERCHANT_ID>/order/10000001701/transaction/PAY
     body: 
-      string: "{\"apiOperation\":\"PAY\",\"order\":{\"amount\":\"100.00\",\"currency\":\"EUR\",\"reference\":\"PAY\"},\"transaction\":{\"reference\":\"PAY\"},\"sourceOfFunds\":{\"type\":\"CARD\"},\"session\":{\"id\":\"SESSION0002851313900E8334787M11\"}}"
+      string: "{\"apiOperation\":\"PAY\",\"order\":{\"amount\":\"100.00\",\"currency\":\"EUR\",\"reference\":\"PAY\"},\"transaction\":{\"reference\":\"PAY\"},\"sourceOfFunds\":{\"type\":\"CARD\"},\"session\":{\"id\":\"SESSION0002325439400H49680314H4\"}}"
     headers: 
       Accept: 
       - "*/*"
+      Accept-Encoding: 
+      - gzip, deflate
       Content-Length: 
       - "202"
       Content-Type: 
       - Application/json;charset=UTF-8
-      Accept-Encoding: 
-      - gzip, deflate
   response: 
     status: 
       code: 201
       message: Created
     headers: 
+      Expires: 
+      - "0"
+      Cache-Control: 
+      - no-cache, no-store, must-revalidate
+      Date: 
+      - Tue, 26 Jan 2016 06:50:36 GMT
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a0d9bda4146101809f4af21e6f4792238de4bee08cea1812deba271aabea87e60f; Path=/
+      Pragma: 
+      - no-cache
       Content-Length: 
       - "1622"
       Content-Type: 
       - application/json;charset=UTF-8
-      Date: 
-      - Mon, 11 Jan 2016 23:51:01 GMT
-      Pragma: 
-      - no-cache
-      Expires: 
-      - "0"
-      Set-Cookie: 
-      - TS018aacab=01c9ad79a0796b69ab1ce9b58d484b4f827bac5f1ec6155375c0f35cd940baaf32a2bc7cf0; Path=/
-      Cache-Control: 
-      - no-cache, no-store, must-revalidate
     body: 
-      string: "{\"gatewayEntryPoint\":\"WEB_SERVICES_API\",\"merchant\":\"<TNS_MERCHANT_ID>\",\"order\":{\"amount\":100.00,\"creationTime\":\"2016-01-11T23:51:01.592Z\",\"currency\":\"EUR\",\"id\":\"10000001601\",\"reference\":\"PAY\",\"status\":\"CAPTURED\",\"totalAuthorizedAmount\":100.00,\"totalCapturedAmount\":100.00,\"totalRefundedAmount\":0.00},\"response\":{\"acquirerCode\":\"00\",\"acquirerMessage\":\"Approved\",\"cardSecurityCode\":{\"acquirerCode\":\"1\",\"gatewayCode\":\"NOT_PROCESSED\"},\"gatewayCode\":\"APPROVED\"},\"result\":\"SUCCESS\",\"risk\":{\"response\":{\"gatewayCode\":\"ACCEPTED\",\"review\":{\"decision\":\"NOT_REQUIRED\"},\"rule\":[{\"data\":\"512345\",\"name\":\"MERCHANT_BIN_RANGE\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"data\":\"P\",\"name\":\"MERCHANT_CSC\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"name\":\"SUSPECT_CARD_LIST\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"name\":\"TRUSTED_CARD_LIST\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"data\":\"512345\",\"name\":\"MSO_BIN_RANGE\",\"recommendation\":\"NO_ACTION\",\"type\":\"MSO_RULE\"},{\"data\":\"P\",\"name\":\"MSO_CSC\",\"recommendation\":\"NO_ACTION\",\"type\":\"MSO_RULE\"}]}},\"sourceOfFunds\":{\"provided\":{\"card\":{\"brand\":\"MASTERCARD\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"fundingMethod\":\"CREDIT\",\"issuer\":\"BANCO DEL PICHINCHA, C.A.\",\"number\":\"512345xxxxxx2346\",\"scheme\":\"MASTERCARD\"}},\"type\":\"CARD\"},\"timeOfRecord\":\"2016-01-11T23:51:01.592Z\",\"transaction\":{\"acquirer\":{\"batch\":1,\"id\":\"AIB\",\"merchantId\":\"011855511\"},\"amount\":100.00,\"authorizationCode\":\"029325\",\"currency\":\"EUR\",\"frequency\":\"SINGLE\",\"id\":\"PAY\",\"receipt\":\"AAAAC5BN65\",\"reference\":\"PAY\",\"source\":\"MOTO\",\"terminal\":\"31208585\",\"type\":\"PAYMENT\"},\"version\":\"32\"}"
+      string: "{\"gatewayEntryPoint\":\"WEB_SERVICES_API\",\"merchant\":\"<TNS_MERCHANT_ID>\",\"order\":{\"amount\":100.00,\"creationTime\":\"2016-01-26T06:50:36.017Z\",\"currency\":\"EUR\",\"id\":\"10000001701\",\"reference\":\"PAY\",\"status\":\"CAPTURED\",\"totalAuthorizedAmount\":100.00,\"totalCapturedAmount\":100.00,\"totalRefundedAmount\":0.00},\"response\":{\"acquirerCode\":\"00\",\"acquirerMessage\":\"Approved\",\"cardSecurityCode\":{\"acquirerCode\":\"1\",\"gatewayCode\":\"NOT_PROCESSED\"},\"gatewayCode\":\"APPROVED\"},\"result\":\"SUCCESS\",\"risk\":{\"response\":{\"gatewayCode\":\"ACCEPTED\",\"review\":{\"decision\":\"NOT_REQUIRED\"},\"rule\":[{\"data\":\"512345\",\"name\":\"MERCHANT_BIN_RANGE\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"data\":\"P\",\"name\":\"MERCHANT_CSC\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"name\":\"SUSPECT_CARD_LIST\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"name\":\"TRUSTED_CARD_LIST\",\"recommendation\":\"NO_ACTION\",\"type\":\"MERCHANT_RULE\"},{\"data\":\"512345\",\"name\":\"MSO_BIN_RANGE\",\"recommendation\":\"NO_ACTION\",\"type\":\"MSO_RULE\"},{\"data\":\"P\",\"name\":\"MSO_CSC\",\"recommendation\":\"NO_ACTION\",\"type\":\"MSO_RULE\"}]}},\"sourceOfFunds\":{\"provided\":{\"card\":{\"brand\":\"MASTERCARD\",\"expiry\":{\"month\":\"5\",\"year\":\"17\"},\"fundingMethod\":\"CREDIT\",\"issuer\":\"BANCO DEL PICHINCHA, C.A.\",\"number\":\"512345xxxxxx2346\",\"scheme\":\"MASTERCARD\"}},\"type\":\"CARD\"},\"timeOfRecord\":\"2016-01-26T06:50:36.017Z\",\"transaction\":{\"acquirer\":{\"batch\":1,\"id\":\"AIB\",\"merchantId\":\"011855511\"},\"amount\":100.00,\"authorizationCode\":\"029665\",\"currency\":\"EUR\",\"frequency\":\"SINGLE\",\"id\":\"PAY\",\"receipt\":\"AAAAC65KID\",\"reference\":\"PAY\",\"source\":\"MOTO\",\"terminal\":\"31208585\",\"type\":\"PAYMENT\"},\"version\":\"30\"}"
     http_version: 
-  recorded_at: Mon, 11 Jan 2016 23:51:02 GMT
+  recorded_at: Tue, 26 Jan 2016 06:50:36 GMT

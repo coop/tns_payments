@@ -3,36 +3,36 @@ recorded_with: VCR 2.9.3
 http_interactions: 
 - request: 
     method: get
-    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/32/information
+    uri: https://merchant.<TNS_MERCHANT_ID>:<TNS_API_KEY>@secure.ap.tnspayments.com/api/rest/version/30/information
     body: 
       string: ""
     headers: 
       Accept: 
       - "*/*"
-      Content-Type: 
-      - Application/json;charset=UTF-8
       Accept-Encoding: 
       - gzip, deflate
+      Content-Type: 
+      - Application/json;charset=UTF-8
   response: 
     status: 
       code: 200
       message: OK
     headers: 
+      Expires: 
+      - Tue, 26 Jan 2016 06:50:46 GMT
+      Cache-Control: 
+      - public
+      Date: 
+      - Tue, 26 Jan 2016 06:50:36 GMT
+      Set-Cookie: 
+      - TS018aacab=01c9ad79a035d56cbad64b820839ccc7448100f6e07c58d094a02470d73963fb2ab0a51c91; Path=/
+      Last-Modified: 
+      - Tue, 26 Jan 2016 06:50:26 GMT
       Content-Length: 
       - "51"
       Content-Type: 
       - application/json;charset=UTF-8
-      Date: 
-      - Mon, 11 Jan 2016 23:51:09 GMT
-      Expires: 
-      - Mon, 11 Jan 2016 23:51:19 GMT
-      Last-Modified: 
-      - Mon, 11 Jan 2016 23:50:59 GMT
-      Set-Cookie: 
-      - TS018aacab=01c9ad79a07ffbc3550c578a918bb93f79c52d36d38fc54e2eaac9a47f5486f5512724ce9c; Path=/
-      Cache-Control: 
-      - public
     body: 
       string: "{\"gatewayVersion\":\"5.24.5-1R\",\"status\":\"OPERATING\"}"
     http_version: 
-  recorded_at: Mon, 11 Jan 2016 23:51:10 GMT
+  recorded_at: Tue, 26 Jan 2016 06:50:36 GMT

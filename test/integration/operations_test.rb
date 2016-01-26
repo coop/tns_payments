@@ -182,6 +182,6 @@ class TNSPayments::OperationsTest < MiniTest::Unit::TestCase
   end
 
   def prefix(order_id)
-    1_600 + order_id
+    1_700 + order_id
   end
 end
