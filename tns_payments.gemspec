@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- test/*`.split("\n")
   s.require_paths = ["lib"]
 
-  s.add_runtime_dependency     'json', '1.4.6'
   s.add_runtime_dependency     'rest-client', '1.6.7'
   s.add_runtime_dependency     'mime-types', '~> 1.16'
   s.add_runtime_dependency     'nokogiri', '~> 1.2'
