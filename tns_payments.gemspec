@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency     'nokogiri', '~> 1.2'
   s.add_runtime_dependency     'activesupport', '2.3.12'
   s.add_development_dependency 'minitest', '2.11.4'
-  s.add_development_dependency 'rake', '0.8.7'
+  s.add_development_dependency 'rake', '~> 11.1.2'
   s.add_development_dependency 'webmock', '1.8.7'
   s.add_development_dependency 'addressable', '2.2.8'
   s.add_development_dependency 'vcr', '2.9.3'
